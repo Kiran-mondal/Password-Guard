@@ -33,14 +33,14 @@ Feature	Description
 # Termux / Linux
 ```bash
 git clone https://github.com/Kiran-mondal/Password-Guard.git
-cd PasswordGuard
+cd Password-Guard
 pip install -r requirements.txt
 python main.py
 ```
 # Windows
 ```bash
 git clone https://github.com/Kiran-mondal/Password-Guard.git
-cd PasswordGuard
+cd Password-Guard
 pip install -r requirements.txt
 python main.py
 ```
