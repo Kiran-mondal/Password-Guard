@@ -1,10 +1,22 @@
-import hashlib, requests
+import requests, hashlib
+from core.offline_db import offline_check
 
-class BreachCheck:
-    def check(self, password):
-        sha1 = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
-        first, tail = sha1[:5], sha1[5:]
-        url = f"https://api.pwnedpasswords.com/range/{first}"
-        result = requests.get(url).text
-        return tail in result
-      
+PWNED_URL = "https://api.pwnedpasswords.com/range/"
+
+def online_check(password):
+    sha1 = hashlib.sha1(password.encode("utf-8")).hexdigest().upper()
+    head, tail = sha1[:5], sha1[5:]
+    response = requests.get(PWNED_URL + head).text
+    return tail in response
+
+def breach_check(password):
+    offline = offline_check(password)
+    online = False
+
+    try:
+        online = online_check(password)
+    except:
+        pass  # no internet, ignore
+
+    return offline or online
+
