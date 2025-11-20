@@ -13,7 +13,7 @@ Password Guard is an advanced AI-powered password protection & vault management 
 
 ---
 
-🌟 Key Features
+# 🌟 Key Features
 
 Feature	Description
 
@@ -28,26 +28,26 @@ Feature	Description
 
 ---
 
-📥 Installation
+# 📥 Installation
 
-Termux / Linux
-
+# Termux / Linux
+```bash
 git clone https://github.com/Kiran-mondal/Password-Guard.git
 cd PasswordGuard
 pip install -r requirements.txt
 python main.py
-
-Windows
-
+```
+# Windows
+```bash
 git clone https://github.com/Kiran-mondal/Password-Guard.git
 cd PasswordGuard
 pip install -r requirements.txt
 python main.py
-
+```
 
 ---
 
-🔧 Tech Stack
+# 🔧 Tech Stack
 
 Python (Backend Core)
 
@@ -61,7 +61,7 @@ AI Model for Password Strength
 
 ---
 
-🌐 Languages Supported
+# 🌐 Languages Supported
 
 Language	Status
 
@@ -73,7 +73,7 @@ English (EN)	✔ Default
 
 ---
 
-🚀 Roadmap
+# 🚀 Roadmap
 
 🔲 Browser Plugin Support
 
@@ -87,25 +87,25 @@ English (EN)	✔ Default
 
 ---
 
-🧑‍💻 Contribute
+# 🧑‍💻 Contribute
 
 Want to collaborate? Open an issue or send a pull request.
-
+```bash
 git checkout -b feature-name
 git commit -m "New Feature"
 git push origin feature-name
-
+```
 
 ---
 
-📜 License
+# 📜 License
 
 This project is licensed under the MIT License — feel free to modify and use securely.
 
 
 ---
 
-⭐ Support
+# ⭐ Support
 
 If you like the project, star ⭐ the repository on GitHub!
 
@@ -116,6 +116,6 @@ If you like the project, star ⭐ the repository on GitHub!
 
 ---
 
-🔵 Password Guard — Your digital keys protected by intelligence.
+# 🔵 Password Guard — Your digital keys protected by intelligence.
 
 
