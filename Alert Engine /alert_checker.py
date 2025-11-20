@@ -21,3 +21,5 @@ def run_alert(password):
         print("⚠️ Weak Password: Improve characters and length!")
 
     return report
+if report.get("leaked") and not report.get("strong"):
+    print("🚨 CRITICAL ALERT: Device password is leaked + weak!")
