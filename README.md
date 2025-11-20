@@ -33,15 +33,21 @@ Feature	Description
 # Termux / Linux
 ```bash
 git clone https://github.com/Kiran-mondal/Password-Guard.git
+
 cd Password-Guard
-pip install -r requirements.txt
+
+pip install -r requirements.txt --use-feature=fast-deps
+
 python main.py
 ```
 # Windows
 ```bash
 git clone https://github.com/Kiran-mondal/Password-Guard.git
+
 cd Password-Guard
-pip install -r requirements.txt
+
+pip install -r requirements.txt --use-feature=fast-deps
+
 python main.py
 ```
 
