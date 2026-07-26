@@ -4,16 +4,17 @@ import math
 class AIStrength:
     def analyze(self, password: str) -> dict:
         score = 0
-
         length = len(password)
 
-        # Length score
-        if length >= 12:
+        # Length score (Updated: 8 is minimum good, scales up)
+        if length >= 16:
             score += 40
+        elif length >= 12:
+            score += 30
         elif length >= 8:
-            score += 25
+            score += 20
         else:
-            score += 10
+            score += 5
 
         # Character diversity
         types = sum([
@@ -24,10 +25,8 @@ class AIStrength:
         ])
         score += types * 10
 
-        # Predictability reduction (AI logic)
-        predictable = [
-            "123", "111", "abc", "password", "qwerty"
-        ]
+        # Predictability reduction
+        predictable = ["123", "111", "abc", "password", "qwerty"]
         if any(p in password.lower() for p in predictable):
             score -= 35
 
@@ -49,21 +48,16 @@ class AIStrength:
 
     def suggest(self, password):
         suggestions = []
-
-        if len(password) < 12:
-            suggestions.append("Use at least 12 characters")
-
+        # Updated suggestion from 12 to 8
+        if len(password) < 8:
+            suggestions.append("Use at least 8 characters")
         if not re.search(r"[A-Z]", password):
             suggestions.append("Add uppercase letters")
-
         if not re.search(r"[a-z]", password):
             suggestions.append("Add lowercase letters")
-
         if not re.search(r"[0-9]", password):
             suggestions.append("Include numbers")
-
         if not re.search(r"[\W_]", password):
             suggestions.append("Use special symbols (!@#$%)")
-
         return suggestions
-
+        
