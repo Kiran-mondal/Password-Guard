@@ -1,4 +1,4 @@
-import os, re
+import os, re, socket
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -15,3 +15,13 @@ def load_key(path="database/key.bin"):
         return key
     return open(path, "rb").read()
 
+def is_online():
+    """চেক করে ডিভাইসে ইন্টারনেট কানেকশন আছে কি না।"""
+    try:
+        # ক্লাউডফ্লেয়ার ডিএনএস (1.1.1.1) এ ২ সেকেন্ডের জন্য পিং করে চেক করবে
+        socket.create_connection(("1.1.1.1", 53), timeout=2)
+        return True
+    except OSError:
+        pass
+    return False
+    
