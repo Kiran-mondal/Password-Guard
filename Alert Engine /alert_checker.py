@@ -3,11 +3,7 @@ from core.password_checker import check_password
 def run_alert(password):
     report = check_password(password)
 
-    # 🔐 Print full security status summary
-    print(f"\n🔎 Password Strength: {report['strength']}")
-    print(f"💪 Strong: {report['strong']}")
-    print(f"☁️ Leaked: {report['leaked']}")
-    print(f"👁️ AI Score: {report['ai_score']} / 100")
+    # Avoid logging password-derived analysis details in clear text.
 
     # 🚨 Critical Condition (Leak + Weak)
     if report["leaked"] and not report["strong"]:
@@ -21,5 +17,3 @@ def run_alert(password):
         print("⚠️ Weak Password: Improve characters and length!")
 
     return report
-if report.get("leaked") and not report.get("strong"):
-    print("🚨 CRITICAL ALERT: Device password is leaked + weak!")
