@@ -31,10 +31,10 @@ html, body {
     left: 50%; top: 50%; 
     transform: translate(-50%, -50%); 
     width: 650px; height: 650px; 
-    z-index: 0; /* 0 করা হয়েছে যাতে আর কখনো গায়েব না হয় */
+    z-index: 0; 
     pointer-events: none; 
     opacity: 0.4; 
-    perspective: 1000px; /* 3D Effect এর জন্য */
+    perspective: 1000px; /* 3D Effect */
 }
 .circle-outer { 
     position: absolute; width: 100%; height: 100%; 
@@ -206,4 +206,4 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
     
     .cli-guide { padding: 20px 15px; }
     .code-block { font-size: 0.85rem; padding: 15px 10px; }
-}
+                 }
