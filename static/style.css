@@ -170,7 +170,9 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
 .small-copy-btn:hover { background: var(--accent-cyan); color: var(--bg-dark); }
 .comment { color: #64748b; }
 
-/* 👨‍💻 Projects Preview Page Styles */
+/* ========================================= */
+/* 👨‍💻 Projects Preview Page Styles (NEW) */
+/* ========================================= */
 .github-profile { text-align: center; margin-bottom: 40px; }
 .github-profile img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--accent-cyan); box-shadow: 0 0 20px rgba(0,229,255,0.3); margin-bottom: 15px; }
 .github-profile h2 { color: white; margin: 0; font-size: 2rem; }
@@ -190,6 +192,7 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
+/* Mobile Responsiveness Fixes */
 @media (max-width: 900px) {
     nav { padding: 15px 20px; }
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(10, 17, 40, 0.98); padding: 20px 0; border-bottom: 1px solid rgba(0,229,255,0.2); }
@@ -209,4 +212,5 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
     .dl-btn { width: 100%; max-width: 320px; margin-bottom: 10px; }
     .cli-guide { padding: 20px 15px; }
     .code-block { font-size: 0.85rem; padding: 15px 10px; }
-    }
+                }
+                  
