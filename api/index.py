@@ -373,10 +373,11 @@ async def github_preview_page():
             "desc": "Advanced AI-powered password protection & vault management tool with 3D Cyber UI.",
             "live": "https://passwordguard.quarry.dpdns.org",
             "code": "https://github.com/Kiran-mondal/Password-Guard",
-            "svg": '''<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
-                        <circle cx="50" cy="50" r="48" fill="#00e5ff" stroke="#ffffff" stroke-width="2"/>
-                        <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#0a1128" />
-                        <circle cx="50" cy="50" r="10" fill="#00e5ff" />
+            "svg": '''<svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="512" height="512" rx="120" fill="#0D4FF0"/>
+                        <path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/>
+                        <circle cx="256" cy="255" r="70" fill="#0D4FF0"/>
+                        <rect x="235" y="240" width="42" height="75" rx="8" fill="white"/>
                     </svg>'''
         },
         {
