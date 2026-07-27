@@ -2,12 +2,14 @@ import sys
 import os
 
 # Vercel Path Fixer
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
 
 import hashlib
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 from core.ai_strength import AIStrength
 from core.breach_check import breach_check
@@ -15,11 +17,14 @@ from core.breach_check import breach_check
 ai = AIStrength()
 app = FastAPI(title="Password Guard Web")
 
+# Static ফাইলগুলো সার্ভ করার জন্য ডিরেক্টরি মাউন্ট করা হলো
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
+
 class PasswordCheckRequest(BaseModel):
     password: str
 
 # ==========================================
-# 🌐 ওয়েবসাইটের ফ্রন্টএন্ড (HTML Page)
+# 🌐 সাই-ফাই ফ্রন্টএন্ড UI (HTML/JS)
 # ==========================================
 @app.get("/", response_class=HTMLResponse)
 async def serve_website():
@@ -29,80 +34,117 @@ async def serve_website():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Password Guard | Smart Security</title>
-        <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; text-align: center; padding: 50px 20px; margin: 0; }
-            h1 { color: #3b82f6; font-size: 2.5rem; margin-bottom: 10px; }
-            p { font-size: 1.1rem; color: #cbd5e1; max-width: 600px; margin: 0 auto 30px; }
-            .scanner-box { background: #1e293b; padding: 30px; border-radius: 12px; max-width: 500px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
-            input[type="text"] { width: 80%; padding: 12px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; margin-bottom: 20px; font-size: 1rem; }
-            button { background-color: #2563eb; color: white; border: none; padding: 12px 20px; font-size: 1rem; border-radius: 6px; cursor: pointer; transition: 0.3s; margin: 5px; }
-            button:hover { background-color: #1d4ed8; }
-            .gen-btn { background-color: #10b981; }
-            .gen-btn:hover { background-color: #059669; }
-            .copy-btn { background-color: #64748b; }
-            .copy-btn:hover { background-color: #475569; }
-            .result { margin-top: 20px; font-weight: bold; text-align: left; padding: 15px; border-radius: 6px; display: none; }
-            
-            .downloads { margin-top: 40px; }
-            .dl-btn { display: inline-block; margin: 10px; padding: 10px 20px; background: #334155; color: white; text-decoration: none; border-radius: 6px; transition: 0.3s; cursor: pointer; border: 1px solid #475569; }
-            .dl-btn:hover { background: #475569; }
-            
-            /* CLI Guide Section Styles (Hidden initially) */
-            .cli-guide { display: none; background: #1e293b; padding: 25px; border-radius: 12px; max-width: 600px; margin: 40px auto; text-align: left; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); animation: fadeIn 0.4s ease-in-out; }
-            .cli-guide h3 { color: #38bdf8; margin-top: 0; margin-bottom: 10px; }
-            .cli-guide p { margin-left: 0; margin-bottom: 15px; font-size: 1rem; color: #cbd5e1;}
-            
-            .code-box-container { position: relative; background: #0f172a; border-radius: 6px; margin-bottom: 20px; border: 1px solid #334155;}
-            .code-block { padding: 15px 70px 15px 15px; font-family: monospace; color: #a7f3d0; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; font-size: 0.95rem; }
-            .small-copy-btn { position: absolute; right: 10px; top: 10px; background: #3b82f6; color: white; border: none; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; transition: 0.2s;}
-            .small-copy-btn:hover { background: #2563eb; }
-            .comment { color: #64748b; }
-
-            @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        </style>
+        <title>Password Guard | Cyber Security</title>
+        <!-- CSS ফাইলটি এখানে লিঙ্ক করা হয়েছে -->
+        <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
+        <div class="bg-glow glow-1"></div>
+        <div class="bg-glow glow-2"></div>
 
-        <h1>🛡️ Password Guard</h1>
-        <p>Advanced AI-powered password protection & vault management. Scan, generate, and secure your digital life completely offline or on the cloud.</p>
+        <!-- Navbar -->
+        <nav>
+            <div class="hamburger">≡</div>
+            <div class="logo" style="color:var(--accent-cyan);">PASSWORD GUARD</div>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">API docs</a></li>
+                <li><a href="#" class="btn-signup">GitHub</a></li>
+            </ul>
+        </nav>
 
-        <!-- Scanner UI -->
-        <div class="scanner-box">
-            <h2>Web Scanner & Generator</h2>
-            <input type="text" id="pwdInput" placeholder="Enter or generate password...">
-            <br>
-            <button onclick="checkPassword()">Scan Password</button>
-            <button class="gen-btn" onclick="generatePassword()">🪄 Generate Random</button>
-            <button class="copy-btn" onclick="copyPassword('pwdInput')">📋 Copy</button>
-            <div id="resultBox" class="result"></div>
-        </div>
-
-        <!-- CLI App Section -->
-        <div class="downloads">
-            <h3>💻 Install Offline CLI App</h3>
-            <!-- No direct downloads. Click opens the guide. -->
-            <button class="dl-btn" onclick="showInstallGuide('linux')">🐧 Linux</button>
-            <button class="dl-btn" onclick="showInstallGuide('termux')">📱 Termux</button>
-            <button class="dl-btn" onclick="showInstallGuide('windows')">🪟 Windows</button>
-        </div>
-
-        <!-- Dynamic Install & Usage Guide Section -->
-        <div id="cliGuide" class="cli-guide">
-            <h3 id="osTitle">Terminal Installation</h3>
-            <p>Run the following command in your terminal to install the tool:</p>
-            
-            <!-- Install Command Box -->
-            <div class="code-box-container">
-                <button class="small-copy-btn" onclick="copyText('installCommand')">Copy</button>
-                <div id="installCommand" class="code-block"></div>
+        <!-- Main Hero -->
+        <div class="container">
+            <!-- Background Abstract Art -->
+            <div class="tech-graphics">
+                <div class="circle-outer"></div>
+                <div class="circle-inner"></div>
+                <div class="core-eye"></div>
             </div>
 
-            <h3>🚀 How to use it</h3>
-            <p>After installation, use these commands to run it completely offline:</p>
-            <div class="code-box-container">
-                <button class="small-copy-btn" onclick="copyText('usageCommand')">Copy</button>
-                <div id="usageCommand" class="code-block"><span class="comment"># Scan a password</span>
+            <!-- Left Text -->
+            <div class="hero-text">
+                <h1>CYBER SECURITY</h1>
+                <p>Advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly without storing your sensitive data.</p>
+                <button class="btn-learn" onclick="document.querySelector('.scanner-card').scrollIntoView({behavior: 'smooth'})">Learn more</button>
+            </div>
+
+            <!-- Right Scanner Card -->
+            <div class="scanner-card">
+                <h2>Password Strength Scanner</h2>
+                
+                <div class="input-group">
+                    <label>Active Password Entry:</label>
+                    <input type="password" id="pwdInput" placeholder="Type password..." oninput="evaluateRealtime()">
+                </div>
+
+                <div class="strength-header">
+                    <span id="strengthText">Strength: None</span>
+                    <span id="entropyText" style="color: var(--text-muted); font-weight: normal;">0 bits entropy</span>
+                </div>
+                <div class="strength-bar">
+                    <div class="strength-fill" id="strengthFill"></div>
+                </div>
+
+                <div class="requirements-title">Requirements Check</div>
+                <ul class="requirements">
+                    <li id="req-len">At least 8 characters</li>
+                    <li id="req-up">Contains uppercase letters</li>
+                    <li id="req-low">Contains lowercase letters</li>
+                    <li id="req-num">Contains numbers</li>
+                    <li id="req-spc">Contains special characters</li>
+                </ul>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <h4>Strength</h4>
+                        <span id="finalStrength">None</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="stat-box">
+                        <h4>Entropy</h4>
+                        <span id="finalEntropy">0 bits</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <span>Password Masking</span>
+                    <label class="switch">
+                        <input type="checkbox" id="maskToggle" checked onchange="toggleMask()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <button class="btn-action btn-suggest" onclick="generatePassword()">Suggest Strong Password</button>
+                <button class="btn-action btn-scan" onclick="checkCloudBreach()">Cloud Breach Scan</button>
+                
+                <div id="resultBox"></div>
+            </div>
+        </div>
+
+        <!-- Bottom White Section -->
+        <div class="bottom-section">
+            <h2>CLI Installation Option</h2>
+            <div class="bottom-line"></div>
+            <p>For maximum privacy and offline vault management, download the command-line interface. Run deep system scans, generate passwords, and manage your encrypted local database securely from your terminal.</p>
+            
+            <div class="cli-buttons">
+                <button class="dl-btn" onclick="showInstallGuide('linux')">🐧 Linux Terminal</button>
+                <button class="dl-btn" onclick="showInstallGuide('termux')">📱 Termux (Android)</button>
+                <button class="dl-btn" onclick="showInstallGuide('windows')">🪟 Windows CMD</button>
+            </div>
+
+            <div id="cliGuide" class="cli-guide">
+                <h3 id="osTitle">Installation</h3>
+                <div class="code-box-container">
+                    <button class="small-copy-btn" onclick="copyText('installCommand')">Copy</button>
+                    <div id="installCommand" class="code-block"></div>
+                </div>
+                <h3>🚀 Usage Commands</h3>
+                <div class="code-box-container">
+                    <button class="small-copy-btn" onclick="copyText('usageCommand')">Copy</button>
+                    <div id="usageCommand" class="code-block"><span class="comment"># Scan a password</span>
 python main.py --scan "your_password"
 
 <span class="comment"># Generate a strong password</span>
@@ -110,46 +152,73 @@ python main.py --generate
 
 <span class="comment"># Scan device for saved browser passwords</span>
 python main.py --devicescan</div>
+                </div>
             </div>
         </div>
 
-        <!-- JavaScript -->
+        <!-- JavaScript Logic -->
         <script>
-            // Platform specific installation commands
-            const installCmds = {
-                linux: "curl -sO https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_linux.sh && bash install_linux.sh",
-                termux: "curl -sO https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_termux.sh && bash install_termux.sh",
-                windows: "git clone https://github.com/Kiran-mondal/Password-Guard.git\\ncd Password-Guard\\npip install -r requirements.txt"
-            };
-
-            const osTitles = {
-                linux: "🐧 Linux Terminal Installation",
-                termux: "📱 Termux (Android) Installation",
-                windows: "🪟 Windows CMD / PowerShell"
-            };
-
-            function showInstallGuide(os) {
-                const guide = document.getElementById("cliGuide");
-                document.getElementById("osTitle").innerText = osTitles[os];
-                document.getElementById("installCommand").innerText = installCmds[os];
-                
-                guide.style.display = "block";
-                setTimeout(() => {
-                    guide.scrollIntoView({ behavior: "smooth" });
-                }, 100);
+            function toggleMask() {
+                const input = document.getElementById("pwdInput");
+                const toggle = document.getElementById("maskToggle");
+                input.type = toggle.checked ? "password" : "text";
             }
 
-            function copyText(elementId) {
-                let textToCopy = "";
-                if(elementId === 'pwdInput') {
-                    textToCopy = document.getElementById(elementId).value;
-                    if(!textToCopy) { alert("Nothing to copy!"); return; }
-                } else {
-                    textToCopy = document.getElementById(elementId).innerText;
-                }
+            function evaluateRealtime() {
+                const pwd = document.getElementById("pwdInput").value;
                 
-                navigator.clipboard.writeText(textToCopy);
-                alert("Copied to clipboard!");
+                const rLen = pwd.length >= 8;
+                const rUp = /[A-Z]/.test(pwd);
+                const rLow = /[a-z]/.test(pwd);
+                const rNum = /[0-9]/.test(pwd);
+                const rSpc = /[!@#$%^&*()_+\-=\\[\\]{};':"\\\\|,.<>\\/?]/.test(pwd);
+
+                document.getElementById("req-len").className = rLen ? "met" : "";
+                document.getElementById("req-up").className = rUp ? "met" : "";
+                document.getElementById("req-low").className = rLow ? "met" : "";
+                document.getElementById("req-num").className = rNum ? "met" : "";
+                document.getElementById("req-spc").className = rSpc ? "met" : "";
+
+                let score = 0;
+                if(rLen) score += 25;
+                if(rUp) score += 15;
+                if(rLow) score += 15;
+                if(rNum) score += 20;
+                if(rSpc) score += 25;
+
+                const fill = document.getElementById("strengthFill");
+                const text = document.getElementById("strengthText");
+                const fStr = document.getElementById("finalStrength");
+                
+                fill.style.width = score + "%";
+                
+                if (score === 0) {
+                    fill.style.backgroundColor = "transparent";
+                    text.innerText = "Strength: None";
+                    fStr.innerText = "None";
+                } else if (score <= 40) {
+                    fill.style.backgroundColor = "var(--danger)";
+                    text.innerText = "Strength: Weak";
+                    fStr.innerText = "Weak";
+                } else if (score <= 75) {
+                    fill.style.backgroundColor = "var(--warning)";
+                    text.innerText = "Strength: Good";
+                    fStr.innerText = "Good";
+                } else {
+                    fill.style.backgroundColor = "var(--success)";
+                    text.innerText = "Strength: Strong";
+                    fStr.innerText = "Strong";
+                }
+
+                let pool = 0;
+                if(rLow) pool += 26;
+                if(rUp) pool += 26;
+                if(rNum) pool += 10;
+                if(rSpc) pool += 33;
+                let entropy = pool === 0 ? 0 : Math.round(Math.log2(Math.pow(pool, pwd.length)));
+                
+                document.getElementById("entropyText").innerText = entropy + " bits entropy";
+                document.getElementById("finalEntropy").innerText = entropy + " bits";
             }
 
             function generatePassword() {
@@ -158,18 +227,21 @@ python main.py --devicescan</div>
                 for (let i = 0; i < 16; i++) {
                     password += chars.charAt(Math.floor(Math.random() * chars.length));
                 }
-                document.getElementById("pwdInput").value = password;
-                checkPassword(); 
+                const input = document.getElementById("pwdInput");
+                document.getElementById("maskToggle").checked = false;
+                toggleMask();
+                input.value = password;
+                evaluateRealtime(); 
             }
 
-            async function checkPassword() {
+            async function checkCloudBreach() {
                 const pwd = document.getElementById("pwdInput").value;
                 const resultBox = document.getElementById("resultBox");
                 if(!pwd) { alert("Please enter a password!"); return; }
 
                 resultBox.style.display = "block";
-                resultBox.style.backgroundColor = "#334155";
-                resultBox.innerHTML = "Scanning on Cloud Database... ⏳";
+                resultBox.style.backgroundColor = "#1e293b";
+                resultBox.innerHTML = "Scanning Neon Cloud Database... ⏳";
 
                 try {
                     const response = await fetch("/api/scan", {
@@ -181,18 +253,38 @@ python main.py --devicescan</div>
                     const data = await response.json();
                     
                     if(data.leaked) {
-                        resultBox.style.backgroundColor = "#7f1d1d";
+                        resultBox.style.backgroundColor = "#991b1b";
                         resultBox.innerHTML = `🚨 <b>CRITICAL ALERT:</b> Password found in leaks!<br><br><b>AI Score:</b> ${data.ai_score}/100<br><b>Tips:</b> ${data.suggestions.join(', ')}`;
                     } else if(data.ai_score < 70) {
-                        resultBox.style.backgroundColor = "#9a3412";
+                        resultBox.style.backgroundColor = "#b45309";
                         resultBox.innerHTML = `⚠️ <b>Safe, but Weak.</b><br><br><b>AI Score:</b> ${data.ai_score}/100<br><b>Tips:</b> ${data.suggestions.join(', ')}`;
                     } else {
-                        resultBox.style.backgroundColor = "#14532d";
+                        resultBox.style.backgroundColor = "#166534";
                         resultBox.innerHTML = `✅ <b>Safe & Strong!</b><br><br><b>AI Score:</b> ${data.ai_score}/100<br>No leaks found.`;
                     }
                 } catch(err) {
-                    resultBox.innerHTML = "❌ Error connecting to server.";
+                    resultBox.innerHTML = "❌ Error connecting to secure server.";
                 }
+            }
+
+            const installCmds = {
+                linux: "curl -sO https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_linux.sh && bash install_linux.sh",
+                termux: "curl -sO https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_termux.sh && bash install_termux.sh",
+                windows: "git clone https://github.com/Kiran-mondal/Password-Guard.git\\ncd Password-Guard\\npip install -r requirements.txt"
+            };
+            const osTitles = { linux: "🐧 Linux Terminal", termux: "📱 Termux (Android)", windows: "🪟 Windows CMD" };
+
+            function showInstallGuide(os) {
+                const guide = document.getElementById("cliGuide");
+                document.getElementById("osTitle").innerText = osTitles[os];
+                document.getElementById("installCommand").innerText = installCmds[os];
+                guide.style.display = "block";
+                setTimeout(() => { guide.scrollIntoView({ behavior: "smooth" }); }, 100);
+            }
+
+            function copyText(elementId) {
+                navigator.clipboard.writeText(document.getElementById(elementId).innerText);
+                alert("Copied to clipboard!");
             }
         </script>
     </body>
