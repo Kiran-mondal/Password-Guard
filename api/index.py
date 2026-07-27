@@ -2,7 +2,6 @@ import sys
 import os
 import re 
 
-# Vercel Path Fixer
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
@@ -23,7 +22,6 @@ app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), na
 class PasswordCheckRequest(BaseModel):
     password: str
 
-# ================= HTML BASE TEMPLATE =================
 def get_base_html(title, active_path, content):
     return f"""
     <!DOCTYPE html>
@@ -39,14 +37,12 @@ def get_base_html(title, active_path, content):
         <div class="bg-glow glow-1"></div>
         <div class="bg-glow glow-2"></div>
 
-        <!-- 🔄 FIXED 3D Background Animation -->
         <div class="tech-graphics">
             <div class="circle-outer"></div>
             <div class="circle-inner"></div>
             <div class="core-eye"></div>
         </div>
 
-        <!-- Sticky Navbar -->
         <nav>
             <div class="logo scramble-text" data-value="PASSWORD GUARD" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem; cursor: pointer;" onclick="window.location.href='/'">PASSWORD GUARD</div>
             <div class="hamburger" onclick="toggleMobileMenu()">≡</div>
@@ -55,7 +51,7 @@ def get_base_html(title, active_path, content):
                 <li><a href="/" class="{'active-link' if active_path == '/' else 'nav-item'}">Home</a></li>
                 <li><a href="/about" class="{'active-link' if active_path == '/about' else 'nav-item'}">About</a></li>
                 <li><a href="/cli" class="{'active-link' if active_path == '/cli' else 'nav-item'}">CLI Setup</a></li>
-                <li><a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="nav-item">GitHub</a></li>
+                <li><a href="/github" class="{'active-link' if active_path == '/github' else 'nav-item'}">My Projects</a></li>
             </ul>
         </nav>
 
@@ -67,23 +63,16 @@ def get_base_html(title, active_path, content):
                 navLinks.classList.toggle("active");
             }}
 
-            // ================= CYBER DECRYPTION EFFECT (FIXED SYNTAX) =================
-            // এখানে |}}{{[] ব্যবহার করে ব্র্যাকেট ফিক্স করা হয়েছে
             const scrambleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+~`|}}{{[]:;?><,./-=";
 
             document.addEventListener('DOMContentLoaded', initScramble);
 
             function initScramble() {{
                 document.querySelectorAll('.scramble-text').forEach(element => {{
-                    // Hover effect
                     element.addEventListener('mouseover', event => {{
                         runScrambleEffect(event.target);
                     }});
-                    
-                    // Run instantly on load
                     runScrambleEffect(element); 
-                    
-                    // Auto repeat every 15 seconds
                     setInterval(() => {{
                         runScrambleEffect(element);
                     }}, 15000);
@@ -115,7 +104,6 @@ def get_base_html(title, active_path, content):
                 }}, 30); 
             }}
 
-            // Scanner Scripts
             function toggleMask() {{
                 const input = document.getElementById("pwdInput");
                 if(!input) return;
@@ -257,24 +245,20 @@ def get_base_html(title, active_path, content):
     </html>
     """
 
-# ================= MULTI-PAGE ROUTES =================
-
 @app.get("/", response_class=HTMLResponse)
 async def home_page():
     content = """
     <div class="container">
-        <!-- Left Text -->
         <div class="hero-text">
             <h1 class="scramble-text" data-value="PASSWORD GUARD">PASSWORD GUARD</h1>
             <p>Advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly without storing your sensitive data.</p>
         </div>
 
-        <!-- Right Scanner Card -->
         <div class="scanner-card">
             <h2>Password Strength Scanner</h2>
             
             <div class="input-group">
-                <label>Active Password Entry:</label>
+                <label for="pwdInput">Active Password Entry:</label>
                 <input type="password" id="pwdInput" placeholder="Type password..." oninput="evaluateRealtime()">
             </div>
 
@@ -310,7 +294,7 @@ async def home_page():
             <div class="controls">
                 <span>Password Masking</span>
                 <label class="switch">
-                    <input type="checkbox" id="maskToggle" checked onchange="toggleMask()">
+                    <input type="checkbox" id="maskToggle" aria-label="Toggle Password Masking" checked onchange="toggleMask()">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -382,13 +366,80 @@ python main.py --devicescan</div>
     """
     return HTMLResponse(get_base_html("CLI Setup", "/cli", content))
 
-# ================= SITEMAP ROUTE =================
+@app.get("/github", response_class=HTMLResponse)
+async def github_preview_page():
+    projects = [
+        {
+            "icon": "🛡️",
+            "title": "Password Guard",
+            "desc": "Advanced AI-powered password protection & vault management tool with 3D Cyber UI.",
+            "live": "https://passwordguard.quarry.dpdns.org",
+            "code": "https://github.com/Kiran-mondal/Password-Guard"
+        },
+        {
+            "icon": "🏎️",
+            "title": "ZenDrift",
+            "desc": "Dynamic performance tracking system built for an engaging and smooth web experience.",
+            "live": "https://zendrift.quarry.dpdns.org",
+            "code": "https://github.com/Kiran-mondal"
+        },
+        {
+            "icon": "🗣️",
+            "title": "Omlang",
+            "desc": "A modern language and communication-focused platform with an intuitive user interface.",
+            "live": "https://omlang.quarry.dpdns.org",
+            "code": "https://github.com/Kiran-mondal"
+        },
+        {
+            "icon": "♟️",
+            "title": "Chaturanga",
+            "desc": "Interactive web-based application focused on deep logic, planning, and strategy.",
+            "live": "https://chaturanga.quarry.dpdns.org",
+            "code": "https://github.com/Kiran-mondal"
+        }
+    ]
+
+    cards_html = ""
+    for p in projects:
+        cards_html += f"""
+            <div class="repo-card">
+                <h3>{p['icon']} {p['title']}</h3>
+                <p>{p['desc']}</p>
+                <div class="repo-links">
+                    <a href="{p['live']}" target="_blank">Live App</a>
+                    <a href="{p['code']}" target="_blank" class="btn-outline">Source Code</a>
+                </div>
+            </div>
+        """
+
+    content = f"""
+    <div class="container" style="display: block; min-height: 70vh; padding-top: 20px;">
+        
+        <div class="github-profile">
+            <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal">
+            <h2 class="scramble-text" data-value="Kiran Mondal">Kiran Mondal</h2>
+            <p>Full-Stack Developer & Cyber Security Enthusiast</p>
+            <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
+      </div>
+
+        <div style="text-align: center; margin-bottom: 35px; margin-top: 50px;">
+            <h3 style="color: white; font-size: 1.6rem; margin: 0;">🌐 Live Web Projects</h3>
+            <div class="bottom-line" style="width: 150px; margin: 15px auto 0 auto;"></div>
+        </div>
+
+        <div class="repo-grid">
+            {cards_html}
+        </div>
+        <br><br>
+    </div>
+    """
+    return HTMLResponse(get_base_html("Projects Preview", "/github", content))
+
 @app.get("/sitemap.xml", response_class=FileResponse)
 async def get_sitemap():
     sitemap_path = os.path.join(BASE_DIR, "static", "sitemap.xml")
     return FileResponse(sitemap_path, media_type="application/xml")
 
-# ================= API ROUTE =================
 @app.post("/api/scan")
 async def scan_password(req: PasswordCheckRequest):
     pwd = req.password
@@ -426,4 +477,3 @@ async def scan_password(req: PasswordCheckRequest):
         "entropy": strength_data["entropy"],
         "suggestions": strength_data["suggestion"]
     }
-    
