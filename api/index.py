@@ -67,8 +67,9 @@ def get_base_html(title, active_path, content):
                 navLinks.classList.toggle("active");
             }}
 
-            // ================= CYBER DECRYPTION EFFECT =================
-            const scrambleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+~`|}{{[]:;?><,./-=";
+            // ================= CYBER DECRYPTION EFFECT (FIXED SYNTAX) =================
+            // এখানে |}}{{[] ব্যবহার করে ব্র্যাকেট ফিক্স করা হয়েছে
+            const scrambleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+~`|}}{{[]:;?><,./-=";
 
             document.addEventListener('DOMContentLoaded', initScramble);
 
@@ -424,4 +425,5 @@ async def scan_password(req: PasswordCheckRequest):
         "ai_score": strength_data["score"],
         "entropy": strength_data["entropy"],
         "suggestions": strength_data["suggestion"]
-}
+    }
+    
