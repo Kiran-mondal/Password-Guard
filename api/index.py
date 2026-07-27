@@ -1,5 +1,6 @@
 import sys
 import os
+import re 
 
 # Vercel Path Fixer
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,31 +32,28 @@ async def serve_website():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Password Guard | Cyber Security</title>
-        
-        <!-- Favicon (logo.svg) Added Here -->
         <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/assets/logo.svg">
-        
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
         <div class="bg-glow glow-1"></div>
         <div class="bg-glow glow-2"></div>
 
-        <!-- Navbar -->
+        <!-- Sticky Navbar -->
         <nav>
             <div class="logo" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem;">PASSWORD GUARD</div>
-            <!-- Hamburger Click Event Added -->
             <div class="hamburger" onclick="toggleMobileMenu()">≡</div>
             
             <ul class="nav-links" id="navLinks">
+                <!-- Anchor links updated to match section IDs -->
                 <li><a href="#home" onclick="toggleMobileMenu()">Home</a></li>
-                <li><a href="#about" onclick="toggleMobileMenu()">About</a></li>
+                <li><a href="#scanner-section" onclick="toggleMobileMenu()">Scanner</a></li>
                 <li><a href="#cli-section" onclick="toggleMobileMenu()">CLI Setup</a></li>
                 <li><a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="btn-signup">GitHub</a></li>
             </ul>
         </nav>
 
-        <!-- Main Hero -->
+        <!-- Main Hero Section -->
         <div class="container" id="home">
             <div class="tech-graphics">
                 <div class="circle-outer"></div>
@@ -64,14 +62,14 @@ async def serve_website():
             </div>
 
             <!-- Left Text -->
-            <div class="hero-text" id="about">
+            <div class="hero-text">
                 <h1>CYBER SECURITY</h1>
                 <p>Advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly without storing your sensitive data.</p>
-                <button class="btn-learn" onclick="document.querySelector('.scanner-card').scrollIntoView({behavior: 'smooth'})">Try Scanner</button>
+                <button class="btn-learn" onclick="document.querySelector('#scanner-section').scrollIntoView({behavior: 'smooth'})">Try Scanner</button>
             </div>
 
             <!-- Right Scanner Card -->
-            <div class="scanner-card">
+            <div class="scanner-card" id="scanner-section">
                 <h2>Password Strength Scanner</h2>
                 
                 <div class="input-group">
@@ -123,7 +121,7 @@ async def serve_website():
             </div>
         </div>
 
-        <!-- Bottom Dark Section -->
+        <!-- Bottom CLI Section -->
         <div class="bottom-section" id="cli-section">
             <h2>CLI Installation Option</h2>
             <div class="bottom-line"></div>
@@ -158,7 +156,7 @@ python main.py --devicescan</div>
 
         <!-- JavaScript Logic -->
         <script>
-            // Mobile Menu Toggle Logic
+            // Mobile Menu Toggle
             function toggleMobileMenu() {
                 const navLinks = document.getElementById("navLinks");
                 navLinks.classList.toggle("active");
@@ -230,7 +228,7 @@ python main.py --devicescan</div>
             function generatePassword() {
                 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
                 let password = "";
-                for (let i = 0; i < 16; i++) {
+                for (let i = 0; i < 12; i++) {
                     password += chars.charAt(Math.floor(Math.random() * chars.length));
                 }
                 const input = document.getElementById("pwdInput");
@@ -285,7 +283,11 @@ python main.py --devicescan</div>
                 document.getElementById("osTitle").innerText = osTitles[os];
                 document.getElementById("installCommand").innerText = installCmds[os];
                 guide.style.display = "block";
-                setTimeout(() => { guide.scrollIntoView({ behavior: "smooth" }); }, 100);
+                setTimeout(() => { 
+                    // Adjusted scroll calculation to account for the sticky navbar height
+                    const y = guide.getBoundingClientRect().top + window.scrollY - 100;
+                    window.scrollTo({top: y, behavior: 'smooth'});
+                }, 100);
             }
 
             function copyText(elementId) {
@@ -304,6 +306,15 @@ async def scan_password(req: PasswordCheckRequest):
     
     strength_data = ai.analyze(pwd)
     is_leaked = breach_check(pwd)
+    
+    has_upper = bool(re.search(r'[A-Z]', pwd))
+    has_lower = bool(re.search(r'[a-z]', pwd))
+    has_num = bool(re.search(r'[0-9]', pwd))
+    has_special = bool(re.search(r'[^A-Za-z0-9]', pwd))
+    
+    if len(pwd) >= 8 and has_upper and has_lower and has_num and has_special:
+        strength_data["score"] = 100
+        strength_data["suggestion"] = ["Excellent! Your password meets all standard security criteria."]
     
     pwd_hash = hashlib.sha256(pwd.encode()).hexdigest()
     
