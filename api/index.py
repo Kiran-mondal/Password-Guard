@@ -219,7 +219,7 @@ async def home_page():
     <div class="container">
         <!-- Left Text -->
         <div class="hero-text">
-            <h1>CYBER SECURITY</h1>
+            <h1>PASSWORD GUARD</h1>
             <p>Advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly without storing your sensitive data.</p>
         </div>
 
