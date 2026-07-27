@@ -118,7 +118,10 @@ async def scan_password(req: PasswordCheckRequest):
     strength_data = ai.analyze(pwd)
     is_leaked = breach_check(pwd)
     
-    pwd_hash = hashlib.sha256(pwd.encode()).hexdigest()
+    salt = os.urandom(16)
+    iterations = 310000
+    dk = hashlib.pbkdf2_hmac("sha256", pwd.encode("utf-8"), salt, iterations)
+    pwd_hash = f"pbkdf2_sha256${iterations}${salt.hex()}${dk.hex()}"
     
     try:
         from cloud.neon_db import get_db_connection
