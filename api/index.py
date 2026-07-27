@@ -39,37 +39,37 @@ async def serve_website():
         <div class="bg-glow glow-1"></div>
         <div class="bg-glow glow-2"></div>
 
+        <!-- 🔄 Background Fixed Animation -->
+        <div class="tech-graphics">
+            <div class="circle-outer"></div>
+            <div class="circle-inner"></div>
+            <div class="core-eye"></div>
+        </div>
+
         <!-- Sticky Navbar -->
         <nav>
-            <div class="logo" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem;">PASSWORD GUARD</div>
+            <div class="logo" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem; cursor: pointer;" onclick="showPage('home')">PASSWORD GUARD</div>
             <div class="hamburger" onclick="toggleMobileMenu()">≡</div>
             
             <ul class="nav-links" id="navLinks">
-                <!-- Anchor links updated to match section IDs -->
-                <li><a href="#home" onclick="toggleMobileMenu()">Home</a></li>
-                <li><a href="#scanner-section" onclick="toggleMobileMenu()">Scanner</a></li>
-                <li><a href="#cli-section" onclick="toggleMobileMenu()">CLI Setup</a></li>
+                <li><a onclick="showPage('home')" class="nav-item active-link" id="nav-home">Home</a></li>
+                <li><a onclick="showPage('about')" class="nav-item" id="nav-about">About</a></li>
+                <li><a onclick="showPage('cli')" class="nav-item" id="nav-cli">CLI Setup</a></li>
                 <li><a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="btn-signup">GitHub</a></li>
             </ul>
         </nav>
 
-        <!-- Main Hero Section -->
-        <div class="container" id="home">
-            <div class="tech-graphics">
-                <div class="circle-outer"></div>
-                <div class="circle-inner"></div>
-                <div class="core-eye"></div>
-            </div>
-
+        <!-- 📄 PAGE 1: Home View (Hero + Scanner) -->
+        <div id="page-home" class="page-section active">
             <!-- Left Text -->
             <div class="hero-text">
                 <h1>CYBER SECURITY</h1>
                 <p>Advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly without storing your sensitive data.</p>
-                <button class="btn-learn" onclick="document.querySelector('#scanner-section').scrollIntoView({behavior: 'smooth'})">Try Scanner</button>
+                <button class="btn-learn" onclick="document.querySelector('.scanner-card').scrollIntoView({behavior: 'smooth'})">Scroll to Scanner</button>
             </div>
 
             <!-- Right Scanner Card -->
-            <div class="scanner-card" id="scanner-section">
+            <div class="scanner-card">
                 <h2>Password Strength Scanner</h2>
                 
                 <div class="input-group">
@@ -121,28 +121,43 @@ async def serve_website():
             </div>
         </div>
 
-        <!-- Bottom CLI Section -->
-        <div class="bottom-section" id="cli-section">
-            <h2>CLI Installation Option</h2>
-            <div class="bottom-line"></div>
-            <p>For maximum privacy and offline vault management, download the command-line interface. Run deep system scans, generate passwords, and manage your encrypted local database securely from your terminal.</p>
-            
-            <div class="cli-buttons">
-                <button class="dl-btn" onclick="showInstallGuide('linux')">🐧 Linux Terminal</button>
-                <button class="dl-btn" onclick="showInstallGuide('termux')">📱 Termux (Android)</button>
-                <button class="dl-btn" onclick="showInstallGuide('windows')">🪟 Windows CMD</button>
+        <!-- 📄 PAGE 2: About View -->
+        <div id="page-about" class="page-section" style="justify-content: center; text-align: center;">
+            <div class="hero-text" style="padding: 0; max-width: 800px; margin: 0 auto;">
+                <h1 style="font-size: 2.8rem; margin-bottom: 20px;">ABOUT PASSWORD GUARD</h1>
+                <p style="font-size: 1.15rem; margin: 0 auto 30px auto; max-width: 700px; color: #cbd5e1;">
+                    Built with modern web technologies, this tool guarantees your data privacy by performing complex entropy calculations directly in memory without saving plaintext passwords.
+                </p>
+                <p style="font-size: 1.05rem; margin: 0 auto; max-width: 700px;">
+                    Whether you are an everyday user securing your accounts or a cybersecurity enthusiast needing advanced terminal-based vault management, Password Guard provides the ultimate offline and cloud-verified defense system.
+                </p>
+                <button class="btn-learn" onclick="showPage('home')" style="margin-top: 40px;">Go to Scanner</button>
             </div>
+        </div>
 
-            <div id="cliGuide" class="cli-guide">
-                <h3 id="osTitle">Installation</h3>
-                <div class="code-box-container">
-                    <button class="small-copy-btn" onclick="copyText('installCommand')">Copy</button>
-                    <div id="installCommand" class="code-block"></div>
+        <!-- 📄 PAGE 3: CLI Setup View -->
+        <div id="page-cli" class="page-section" style="justify-content: center;">
+            <div class="bottom-section" style="width: 100%; max-width: 1000px; margin: 0 auto;">
+                <h2>CLI Installation Option</h2>
+                <div class="bottom-line"></div>
+                <p>For maximum privacy and offline vault management, download the command-line interface. Run deep system scans, generate passwords, and manage your encrypted local database securely from your terminal.</p>
+                
+                <div class="cli-buttons">
+                    <button class="dl-btn" onclick="showInstallGuide('linux')">🐧 Linux Terminal</button>
+                    <button class="dl-btn" onclick="showInstallGuide('termux')">📱 Termux (Android)</button>
+                    <button class="dl-btn" onclick="showInstallGuide('windows')">🪟 Windows CMD</button>
                 </div>
-                <h3>🚀 Usage Commands</h3>
-                <div class="code-box-container">
-                    <button class="small-copy-btn" onclick="copyText('usageCommand')">Copy</button>
-                    <div id="usageCommand" class="code-block"><span class="comment"># Scan a password</span>
+
+                <div id="cliGuide" class="cli-guide">
+                    <h3 id="osTitle">Installation</h3>
+                    <div class="code-box-container">
+                        <button class="small-copy-btn" onclick="copyText('installCommand')">Copy</button>
+                        <div id="installCommand" class="code-block"></div>
+                    </div>
+                    <h3>🚀 Usage Commands</h3>
+                    <div class="code-box-container">
+                        <button class="small-copy-btn" onclick="copyText('usageCommand')">Copy</button>
+                        <div id="usageCommand" class="code-block"><span class="comment"># Scan a password</span>
 python main.py --scan "your_password"
 
 <span class="comment"># Generate a strong password</span>
@@ -150,13 +165,41 @@ python main.py --generate
 
 <span class="comment"># Scan device for saved browser passwords</span>
 python main.py --devicescan</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- JavaScript Logic -->
         <script>
-            // Mobile Menu Toggle
+            // 🌐 Multi-Page Logic via JavaScript
+            function showPage(pageId) {
+                // Hide all sections
+                document.querySelectorAll('.page-section').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Show requested section
+                document.getElementById('page-' + pageId).classList.add('active');
+                
+                // Update active link styling
+                document.querySelectorAll('.nav-item').forEach(link => {
+                    link.classList.remove('active-link');
+                });
+                if(document.getElementById('nav-' + pageId)) {
+                    document.getElementById('nav-' + pageId).classList.add('active-link');
+                }
+                
+                // Close mobile menu if open
+                const navLinks = document.getElementById("navLinks");
+                if(navLinks.classList.contains("active")) {
+                    navLinks.classList.remove("active");
+                }
+                
+                // Scroll to top automatically like a real page load
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+
             function toggleMobileMenu() {
                 const navLinks = document.getElementById("navLinks");
                 navLinks.classList.toggle("active");
@@ -284,7 +327,6 @@ python main.py --devicescan</div>
                 document.getElementById("installCommand").innerText = installCmds[os];
                 guide.style.display = "block";
                 setTimeout(() => { 
-                    // Adjusted scroll calculation to account for the sticky navbar height
                     const y = guide.getBoundingClientRect().top + window.scrollY - 100;
                     window.scrollTo({top: y, behavior: 'smooth'});
                 }, 100);
