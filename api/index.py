@@ -31,6 +31,10 @@ async def serve_website():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Password Guard | Cyber Security</title>
+        
+        <!-- Favicon (logo.svg) Added Here -->
+        <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/assets/logo.svg">
+        
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
