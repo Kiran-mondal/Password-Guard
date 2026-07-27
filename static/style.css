@@ -34,7 +34,7 @@ html, body {
     z-index: 0; 
     pointer-events: none; 
     opacity: 0.4; 
-    perspective: 1000px; /* 3D Effect */
+    perspective: 1000px; 
 }
 .circle-outer { 
     position: absolute; width: 100%; height: 100%; 
@@ -60,7 +60,6 @@ html, body {
     animation: pulse3D 4s ease-in-out infinite;
 }
 
-/* 3D Keyframes */
 @keyframes spin3D { 
     0% { transform: rotateX(60deg) rotateY(15deg) rotateZ(0deg); }
     100% { transform: rotateX(60deg) rotateY(15deg) rotateZ(360deg); } 
@@ -83,10 +82,8 @@ nav {
 }
 .hamburger { display: none; font-size: 1.8rem; cursor: pointer; color: var(--text-main); font-weight: bold; }
 .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; margin: 0; padding: 0; }
-.nav-links a { color: var(--text-main); text-decoration: none; font-size: 1.1rem; transition: 0.3s; font-weight: 500; }
+.nav-links a { color: var(--text-main); text-decoration: none; font-size: 1.1rem; transition: 0.3s; font-weight: 500; cursor: pointer; }
 .nav-links a:hover, .nav-links a.active-link { color: var(--accent-cyan); text-shadow: 0 0 8px var(--accent-cyan); }
-.nav-links .btn-signup { background: var(--accent-cyan); color: var(--bg-dark); padding: 8px 25px; border-radius: 20px; font-weight: bold; }
-.nav-links .btn-signup:hover { color: var(--bg-dark); background: white; box-shadow: 0 0 15px var(--accent-cyan); }
 
 /* Main Layout */
 .container { 
@@ -96,9 +93,22 @@ nav {
     animation: fadeIn 0.4s ease-in-out;
 }
 
+/* Scramble Effect Styles */
+.scramble-text {
+    font-family: 'Space Mono', 'Courier New', monospace; /* Prevents jitter during animation */
+    user-select: none;
+    cursor: crosshair;
+}
+
 /* Hero Text Area */
 .hero-text { flex: 1; min-width: 300px; padding-right: 40px; position: relative; z-index: 5; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-.hero-text h1 { color: var(--accent-cyan); font-size: 3.5rem; margin-bottom: 15px; font-weight: 400; letter-spacing: 1px; }
+.hero-text h1 { 
+    color: var(--accent-cyan); 
+    font-size: 3.5rem; 
+    margin-bottom: 15px; 
+    font-weight: bold; 
+    letter-spacing: 0.1em; 
+}
 .hero-text p { color: var(--text-muted); line-height: 1.6; font-size: 1.1rem; text-align: justify; max-width: 550px;}
 .btn-learn { margin-top: 30px; padding: 12px 35px; background: var(--accent-cyan); border: none; color: var(--bg-dark); border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
 .btn-learn:hover { background: white; box-shadow: 0 0 20px var(--accent-cyan); }
@@ -206,4 +216,4 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
     
     .cli-guide { padding: 20px 15px; }
     .code-block { font-size: 0.85rem; padding: 15px 10px; }
-                 }
+}
