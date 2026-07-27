@@ -244,7 +244,6 @@ def get_base_html(title, active_path, content):
     </body>
     </html>
     """
-
 @app.get("/", response_class=HTMLResponse)
 async def home_page():
     content = """
@@ -365,45 +364,66 @@ python main.py --devicescan</div>
     </div>
     """
     return HTMLResponse(get_base_html("CLI Setup", "/cli", content))
-
 @app.get("/github", response_class=HTMLResponse)
 async def github_preview_page():
-    projects = [
+    all_projects = [
         {
-            "icon": "🛡️",
+            "id": "password-guard",
             "title": "Password Guard",
             "desc": "Advanced AI-powered password protection & vault management tool with 3D Cyber UI.",
             "live": "https://passwordguard.quarry.dpdns.org",
-            "code": "https://github.com/Kiran-mondal/Password-Guard"
+            "code": "https://github.com/Kiran-mondal/Password-Guard",
+            "svg": '''<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+                        <circle cx="50" cy="50" r="48" fill="#00e5ff" stroke="#ffffff" stroke-width="2"/>
+                        <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#0a1128" />
+                        <circle cx="50" cy="50" r="10" fill="#00e5ff" />
+                    </svg>'''
         },
         {
-            "icon": "🏎️",
+            "id": "zendrift",
             "title": "ZenDrift",
             "desc": "Dynamic performance tracking system built for an engaging and smooth web experience.",
             "live": "https://zendrift.quarry.dpdns.org",
-            "code": "https://github.com/Kiran-mondal"
+            "code": "https://github.com/Kiran-mondal",
+            "svg": '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36">
+                        <path d="M 120 390 C 120 270, 392 350, 392 210 C 392 130, 310 90, 256 90" fill="none" stroke="#58a6ff" stroke-width="45" stroke-linecap="round" />
+                        <circle cx="256" cy="90" r="45" fill="#58a6ff" />
+                    </svg>'''
         },
         {
-            "icon": "🗣️",
+            "id": "omlang",
             "title": "Omlang",
             "desc": "A modern language and communication-focused platform with an intuitive user interface.",
             "live": "https://omlang.quarry.dpdns.org",
-            "code": "https://github.com/Kiran-mondal"
+            "code": "https://github.com/Kiran-mondal",
+            "svg": '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="36" height="36">
+                        <path d="M 280 250 C 420 250, 420 380, 350 400 C 450 420, 450 580, 280 580" stroke="#00f2fe" stroke-width="45" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="450" cy="120" r="30" fill="#00f2fe" />
+                    </svg>'''
         },
         {
-            "icon": "♟️",
+            "id": "chaturanga",
             "title": "Chaturanga",
             "desc": "Interactive web-based application focused on deep logic, planning, and strategy.",
             "live": "https://chaturanga.quarry.dpdns.org",
-            "code": "https://github.com/Kiran-mondal"
+            "code": "https://github.com/Kiran-mondal",
+            "svg": '''<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+                        <circle cx="50" cy="50" r="48" fill="#d97706" stroke="#ffffff" stroke-width="2"/>
+                        <path d="M50 20 L75 55 L50 80 L25 55 Z" fill="#ffffff" />
+                    </svg>'''
         }
     ]
 
     cards_html = ""
-    for p in projects:
+    for p in all_projects:
+        if p["id"] == "password-guard":  # বর্তমান অ্যাপটি এই পেজে দেখাবে না
+            continue
         cards_html += f"""
             <div class="repo-card">
-                <h3>{p['icon']} {p['title']}</h3>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                    {p['svg']}
+                    <h3 style="margin: 0; font-size: 1.3rem; color: var(--accent-cyan);">{p['title']}</h3>
+                </div>
                 <p>{p['desc']}</p>
                 <div class="repo-links">
                     <a href="{p['live']}" target="_blank">Live App</a>
@@ -420,11 +440,11 @@ async def github_preview_page():
             <h2 class="scramble-text" data-value="Kiran Mondal">Kiran Mondal</h2>
             <p>Full-Stack Developer & Cyber Security Enthusiast</p>
             <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
-      </div>
+        </div>
 
         <div style="text-align: center; margin-bottom: 35px; margin-top: 50px;">
-            <h3 style="color: white; font-size: 1.6rem; margin: 0;">🌐 Live Web Projects</h3>
-            <div class="bottom-line" style="width: 150px; margin: 15px auto 0 auto;"></div>
+            <h3 style="color: white; font-size: 1.6rem; margin: 0;">🌐 My Other Live Projects</h3>
+            <div class="bottom-line" style="width: 180px; margin: 15px auto 0 auto;"></div>
         </div>
 
         <div class="repo-grid">
@@ -476,4 +496,4 @@ async def scan_password(req: PasswordCheckRequest):
         "ai_score": strength_data["score"],
         "entropy": strength_data["entropy"],
         "suggestions": strength_data["suggestion"]
-    }
+}
