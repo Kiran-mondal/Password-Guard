@@ -12,10 +12,14 @@
 
 * { 
     box-sizing: border-box; 
-    scroll-behavior: smooth; 
 }
 
-/* Fixed viewport width issue causing empty space on the right */
+/* Smooth scrolling added directly to HTML for better support */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px; /* Navbar এর জন্য স্পেস রাখা হলো */
+}
+
 html, body { 
     width: 100%;
     max-width: 100vw;
@@ -32,13 +36,27 @@ html, body {
 .glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%); }
 .glow-2 { bottom: 20%; right: -150px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 48, 255, 0.15) 0%, transparent 70%); }
 
-/* Navbar */
-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; width: 100%; position: relative; z-index: 20; background: rgba(10, 17, 40, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,229,255,0.1); }
+/* Navbar - Updated to Sticky */
+nav { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 20px 5%; 
+    width: 100%; 
+    position: sticky; /* স্ক্রল করলেও উপরে আটকে থাকবে */
+    top: 0;
+    z-index: 100; 
+    background: rgba(10, 17, 40, 0.85); 
+    backdrop-filter: blur(12px); 
+    border-bottom: 1px solid rgba(0,229,255,0.1); 
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
 .hamburger { display: none; font-size: 1.8rem; cursor: pointer; color: var(--text-main); font-weight: bold; }
 .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; margin: 0; padding: 0; }
-.nav-links a { color: var(--text-main); text-decoration: none; font-size: 1.1rem; transition: 0.3s; }
-.nav-links a:hover { color: var(--accent-cyan); }
+.nav-links a { color: var(--text-main); text-decoration: none; font-size: 1.1rem; transition: 0.3s; font-weight: 500; }
+.nav-links a:hover { color: var(--accent-cyan); text-shadow: 0 0 8px var(--accent-cyan); }
 .nav-links .btn-signup { background: var(--accent-cyan); color: var(--bg-dark); padding: 8px 25px; border-radius: 20px; font-weight: bold; }
+.nav-links .btn-signup:hover { color: var(--bg-dark); background: white; box-shadow: 0 0 15px var(--accent-cyan); }
 
 /* Main Layout */
 .container { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding: 60px 5%; width: 100%; max-width: 1400px; margin: 0 auto; min-height: 80vh; position: relative; }
@@ -59,7 +77,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 @keyframes spin { 100% { transform: rotate(360deg); } }
 @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
 
-/* Scanner Card - Adjusted Desktop Size */
+/* Scanner Card */
 .scanner-card { flex: 0.9; width: 100%; max-width: 550px; background: rgba(18, 31, 61, 0.85); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(0,229,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(0, 229, 255, 0.05); position: relative; z-index: 10; margin-left: auto; }
 .scanner-card h2 { font-size: 1.8rem; margin-top: 0; margin-bottom: 25px; font-weight: 500; }
 
@@ -104,8 +122,8 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
 .btn-scan:hover { background: var(--accent-hover); box-shadow: 0 0 15px rgba(0,229,255,0.4); }
 #resultBox { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-size: 0.95rem; line-height: 1.5; color: white; }
 
-/* Updated Bottom Section - Dark Theme */
-.bottom-section { background: rgba(18, 31, 61, 0.6); color: var(--text-main); padding: 70px 5%; width: 100%; text-align: center; border-top: 1px solid rgba(0,229,255,0.1); margin-top: 50px; backdrop-filter: blur(5px); }
+/* Bottom Section */
+.bottom-section { background: rgba(18, 31, 61, 0.6); color: var(--text-main); padding: 70px 5%; width: 100%; text-align: center; border-top: 1px solid rgba(0,229,255,0.1); margin-top: 50px; margin-bottom: 50px; backdrop-filter: blur(5px); }
 .bottom-section h2 { font-size: 2.5rem; color: var(--text-main); margin-top: 0; margin-bottom: 15px; font-weight: 500; }
 .bottom-line { width: 300px; height: 3px; background: var(--accent-cyan); margin: 0 auto 25px auto; box-shadow: 0 0 10px var(--accent-cyan); max-width: 80%; }
 .bottom-section p { max-width: 800px; margin: 0 auto 40px auto; color: var(--text-muted); line-height: 1.6; font-size: 1.1rem; }
@@ -114,7 +132,7 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
 .dl-btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 12px 25px; font-size: 1rem; border-radius: 8px; cursor: pointer; transition: 0.3s; }
 .dl-btn:hover { background: #334155; border-color: var(--accent-cyan); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
-/* CLI Guide - Dark Theme */
+/* CLI Guide */
 .cli-guide { display: none; background: rgba(10, 17, 40, 0.9); padding: 30px; border-radius: 12px; width: 100%; max-width: 700px; margin: 0 auto; text-align: left; border: 1px solid rgba(0,229,255,0.2); box-shadow: 0 15px 30px rgba(0,0,0,0.4); animation: fadeIn 0.4s; }
 .cli-guide h3 { color: var(--accent-cyan); margin-top: 0; }
 .code-box-container { position: relative; background: #060d1f; border-radius: 8px; margin-bottom: 25px; border: 1px solid #1e293b; width: 100%; }
@@ -131,7 +149,6 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
 @media (max-width: 900px) {
     nav { padding: 15px 20px; }
     
-    /* Mobile Menu Logic */
     .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(10, 17, 40, 0.98); padding: 20px 0; border-bottom: 1px solid rgba(0,229,255,0.2); }
     .nav-links.active { display: flex; }
     
@@ -143,9 +160,14 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
     .hero-text h1 { font-size: 2.2rem; } 
     .hero-text p { font-size: 1rem; margin: 0 auto; text-align: center; }
     
-    .tech-graphics { display: none; }
+    /* 🔄 Mobile Animation Restored! */
+    .tech-graphics { 
+        display: block; 
+        top: 25%; 
+        transform: translate(-50%, -50%) scale(0.65); /* Scale reduced for mobile */
+        opacity: 0.15; /* Reduced opacity so text remains readable */
+    }
     
-    /* Maximizing space for the scanner card on mobile */
     .scanner-card { padding: 25px 20px; margin: 0 auto; width: 100%; max-width: 100%; }
     .scanner-card h2 { font-size: 1.5rem; }
     
@@ -157,6 +179,5 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
     .dl-btn { width: 100%; max-width: 320px; margin-bottom: 10px; }
     
     .cli-guide { padding: 20px 15px; }
-    .code-block { font-size: 0.85rem; padding: 15px 10px; }      
-}
-                 
+    .code-block { font-size: 0.85rem; padding: 15px 10px; }
+             }
