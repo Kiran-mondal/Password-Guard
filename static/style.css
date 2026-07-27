@@ -10,19 +10,14 @@
     --success: #00e5ff;
 }
 
-* { 
-    box-sizing: border-box; 
-}
+* { box-sizing: border-box; }
 
 html, body { 
-    width: 100%;
-    max-width: 100vw;
+    width: 100%; max-width: 100vw;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background-color: var(--bg-dark); 
     color: var(--text-main); 
-    margin: 0; 
-    padding: 0;
-    overflow-x: hidden; 
+    margin: 0; padding: 0; overflow-x: hidden; 
 }
 
 /* Background Glowing Effects */
@@ -33,14 +28,10 @@ html, body {
 /* 🔄 FIXED Background Animation for ALL Devices */
 .tech-graphics { 
     position: fixed; 
-    left: 50%; 
-    top: 50%; 
+    left: 50%; top: 50%; 
     transform: translate(-50%, -50%); 
-    width: 550px; 
-    height: 550px; 
-    z-index: -1; 
-    pointer-events: none; 
-    opacity: 0.35; 
+    width: 550px; height: 550px; 
+    z-index: -1; pointer-events: none; opacity: 0.35; 
 }
 .circle-outer { position: absolute; width: 100%; height: 100%; border: 1px dashed rgba(0,229,255,0.4); border-radius: 50%; animation: spin 25s linear infinite; }
 .circle-inner { position: absolute; top: 15%; left: 15%; width: 70%; height: 70%; border: 3px solid rgba(0,48,255,0.3); border-top-color: var(--accent-cyan); border-radius: 50%; box-shadow: 0 0 30px rgba(0,229,255,0.2); animation: spinReverse 15s linear infinite; }
@@ -51,41 +42,23 @@ html, body {
 
 /* Navbar */
 nav { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 20px 5%; 
-    width: 100%; 
-    position: sticky; 
-    top: 0;
-    z-index: 100; 
-    background: rgba(10, 17, 40, 0.85); 
-    backdrop-filter: blur(12px); 
-    border-bottom: 1px solid rgba(0,229,255,0.1); 
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 20px 5%; width: 100%; position: sticky; top: 0; z-index: 100; 
+    background: rgba(10, 17, 40, 0.85); backdrop-filter: blur(12px); 
+    border-bottom: 1px solid rgba(0,229,255,0.1); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 .hamburger { display: none; font-size: 1.8rem; cursor: pointer; color: var(--text-main); font-weight: bold; }
 .nav-links { display: flex; list-style: none; gap: 30px; align-items: center; margin: 0; padding: 0; }
-.nav-links a { color: var(--text-main); text-decoration: none; font-size: 1.1rem; transition: 0.3s; font-weight: 500; cursor: pointer; }
+.nav-links a { color: var(--text-main); text-decoration: none; font-size: 1.1rem; transition: 0.3s; font-weight: 500; }
 .nav-links a:hover, .nav-links a.active-link { color: var(--accent-cyan); text-shadow: 0 0 8px var(--accent-cyan); }
 .nav-links .btn-signup { background: var(--accent-cyan); color: var(--bg-dark); padding: 8px 25px; border-radius: 20px; font-weight: bold; }
 .nav-links .btn-signup:hover { color: var(--bg-dark); background: white; box-shadow: 0 0 15px var(--accent-cyan); }
 
-/* 📄 Page Section Logic */
-.page-section { 
-    display: none; /* Initially hide all pages */
-    flex-wrap: wrap; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 60px 5%; 
-    width: 100%; 
-    max-width: 1400px; 
-    margin: 0 auto; 
-    min-height: 80vh; 
-    animation: fadeIn 0.5s ease-in-out;
-}
-.page-section.active { 
-    display: flex; /* Show only the active page */
+/* Main Layout */
+.container { 
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; 
+    padding: 60px 5%; width: 100%; max-width: 1400px; margin: 0 auto; min-height: 80vh; 
+    animation: fadeIn 0.4s ease-in-out;
 }
 
 /* Hero Text Area */
@@ -172,17 +145,16 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
     
     .hamburger { display: block; } 
     
-    .page-section { flex-direction: column; padding: 30px 20px; }
+    .container { flex-direction: column; padding: 30px 20px; margin-top: 0; width: 100%; }
     
     .hero-text { padding-right: 0; text-align: center; margin-bottom: 40px; width: 100%; max-width: 100%; }
     .hero-text h1 { font-size: 2.2rem; } 
     .hero-text p { font-size: 1rem; margin: 0 auto; text-align: center; }
     
-    /* 🔄 Mobile Animation Fixed Position! */
+    /* 🔄 Mobile Fixed Animation Restored! */
     .tech-graphics { 
-        display: block; 
-        width: 350px; 
-        height: 350px; 
+        display: block !important; 
+        width: 350px; height: 350px; 
         opacity: 0.25; 
     }
     
