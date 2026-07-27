@@ -1,6 +1,8 @@
-# 🛡️ Password Guard
-
 <div align="center">
+  <img src="assets/logo.svg" alt="Password Guard Logo" width="150" />
+  
+  <h1>Password Guard</h1>
+
   <img src="https://img.shields.io/badge/Python-3.10+-blue.svg" alt="Python Version">
   <img src="https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi" alt="FastAPI">
   <img src="https://img.shields.io/badge/Status-Active-success.svg" alt="Status">
