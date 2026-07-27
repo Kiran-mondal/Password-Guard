@@ -45,14 +45,18 @@ async def serve_website():
             .result { margin-top: 20px; font-weight: bold; text-align: left; padding: 15px; border-radius: 6px; display: none; }
             
             .downloads { margin-top: 40px; }
-            .dl-btn { display: inline-block; margin: 10px; padding: 10px 20px; background: #334155; color: white; text-decoration: none; border-radius: 6px; transition: 0.3s; }
+            .dl-btn { display: inline-block; margin: 10px; padding: 10px 20px; background: #334155; color: white; text-decoration: none; border-radius: 6px; transition: 0.3s; cursor: pointer; border: 1px solid #475569; }
             .dl-btn:hover { background: #475569; }
             
             /* CLI Guide Section Styles (Hidden initially) */
-            .cli-guide { display: none; background: #1e293b; padding: 25px; border-radius: 12px; max-width: 600px; margin: 40px auto; text-align: left; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); animation: fadeIn 0.5s ease-in-out; }
-            .cli-guide h3 { color: #38bdf8; margin-top: 0; margin-bottom: 15px; }
+            .cli-guide { display: none; background: #1e293b; padding: 25px; border-radius: 12px; max-width: 600px; margin: 40px auto; text-align: left; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); animation: fadeIn 0.4s ease-in-out; }
+            .cli-guide h3 { color: #38bdf8; margin-top: 0; margin-bottom: 10px; }
             .cli-guide p { margin-left: 0; margin-bottom: 15px; font-size: 1rem; color: #cbd5e1;}
-            .code-block { background: #0f172a; padding: 15px; border-radius: 6px; font-family: monospace; color: #a7f3d0; line-height: 1.6; overflow-x: auto; }
+            
+            .code-box-container { position: relative; background: #0f172a; border-radius: 6px; margin-bottom: 20px; border: 1px solid #334155;}
+            .code-block { padding: 15px 70px 15px 15px; font-family: monospace; color: #a7f3d0; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; font-size: 0.95rem; }
+            .small-copy-btn { position: absolute; right: 10px; top: 10px; background: #3b82f6; color: white; border: none; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; cursor: pointer; transition: 0.2s;}
+            .small-copy-btn:hover { background: #2563eb; }
             .comment { color: #64748b; }
 
             @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -70,43 +74,82 @@ async def serve_website():
             <br>
             <button onclick="checkPassword()">Scan Password</button>
             <button class="gen-btn" onclick="generatePassword()">🪄 Generate Random</button>
-            <button class="copy-btn" onclick="copyPassword()">📋 Copy</button>
+            <button class="copy-btn" onclick="copyPassword('pwdInput')">📋 Copy</button>
             <div id="resultBox" class="result"></div>
         </div>
 
-        <!-- Downloads Section (Added onClick events) -->
+        <!-- CLI App Section -->
         <div class="downloads">
-            <h3>📥 Download Offline App</h3>
-            <a href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_linux.sh" class="dl-btn" download onclick="showGuide()">🐧 Linux Installer</a>
-            <a href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_termux.sh" class="dl-btn" download onclick="showGuide()">📱 Termux (Android)</a>
-            <a href="https://github.com/Kiran-mondal/Password-Guard/archive/refs/heads/main.zip" class="dl-btn" onclick="showGuide()">🪟 Windows (ZIP)</a>
+            <h3>💻 Install Offline CLI App</h3>
+            <!-- No direct downloads. Click opens the guide. -->
+            <button class="dl-btn" onclick="showInstallGuide('linux')">🐧 Linux</button>
+            <button class="dl-btn" onclick="showInstallGuide('termux')">📱 Termux</button>
+            <button class="dl-btn" onclick="showInstallGuide('windows')">🪟 Windows</button>
         </div>
 
-        <!-- CLI Guide Section (Dynamically shown) -->
+        <!-- Dynamic Install & Usage Guide Section -->
         <div id="cliGuide" class="cli-guide">
-            <h3>💻 Terminal / CLI Usage</h3>
-            <p>Your download has started! You can run the app completely offline via terminal for maximum privacy using these commands:</p>
-            <div class="code-block">
-                <span class="comment"># Scan a password securely</span><br>
-                <code>python main.py --scan "your_password"</code><br><br>
-                
-                <span class="comment"># Generate a strong 16-char password</span><br>
-                <code>python main.py --generate</code><br><br>
-                
-                <span class="comment"># Scan device for saved browser passwords</span><br>
-                <code>python main.py --devicescan</code>
+            <h3 id="osTitle">Terminal Installation</h3>
+            <p>Run the following command in your terminal to install the tool:</p>
+            
+            <!-- Install Command Box -->
+            <div class="code-box-container">
+                <button class="small-copy-btn" onclick="copyText('installCommand')">Copy</button>
+                <div id="installCommand" class="code-block"></div>
+            </div>
+
+            <h3>🚀 How to use it</h3>
+            <p>After installation, use these commands to run it completely offline:</p>
+            <div class="code-box-container">
+                <button class="small-copy-btn" onclick="copyText('usageCommand')">Copy</button>
+                <div id="usageCommand" class="code-block"><span class="comment"># Scan a password</span>
+python main.py --scan "your_password"
+
+<span class="comment"># Generate a strong password</span>
+python main.py --generate
+
+<span class="comment"># Scan device for saved browser passwords</span>
+python main.py --devicescan</div>
             </div>
         </div>
 
         <!-- JavaScript -->
         <script>
-            // Show Guide Function
-            function showGuide() {
+            // Platform specific installation commands
+            const installCmds = {
+                linux: "curl -sO https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_linux.sh && bash install_linux.sh",
+                termux: "curl -sO https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_termux.sh && bash install_termux.sh",
+                windows: "git clone https://github.com/Kiran-mondal/Password-Guard.git\\ncd Password-Guard\\npip install -r requirements.txt"
+            };
+
+            const osTitles = {
+                linux: "🐧 Linux Terminal Installation",
+                termux: "📱 Termux (Android) Installation",
+                windows: "🪟 Windows CMD / PowerShell"
+            };
+
+            function showInstallGuide(os) {
                 const guide = document.getElementById("cliGuide");
+                document.getElementById("osTitle").innerText = osTitles[os];
+                document.getElementById("installCommand").innerText = installCmds[os];
+                
                 guide.style.display = "block";
                 setTimeout(() => {
                     guide.scrollIntoView({ behavior: "smooth" });
                 }, 100);
+            }
+
+            function copyText(elementId) {
+                let textToCopy = "";
+                if(elementId === 'pwdInput') {
+                    textToCopy = document.getElementById(elementId).value;
+                    if(!textToCopy) { alert("Nothing to copy!"); return; }
+                } else {
+                    textToCopy = document.getElementById(elementId).innerText;
+                }
+                
+                navigator.clipboard.writeText(textToCopy);
+                alert("Copied to clipboard!");
             }
 
             function generatePassword() {
@@ -117,13 +160,6 @@ async def serve_website():
                 }
                 document.getElementById("pwdInput").value = password;
                 checkPassword(); 
-            }
-
-            function copyPassword() {
-                const pwd = document.getElementById("pwdInput").value;
-                if(!pwd) { alert("Nothing to copy!"); return; }
-                navigator.clipboard.writeText(pwd);
-                alert("Password copied to clipboard! (Saved)");
             }
 
             async function checkPassword() {
