@@ -17,15 +17,11 @@ from core.breach_check import breach_check
 ai = AIStrength()
 app = FastAPI(title="Password Guard Web")
 
-# Static ফাইলগুলো সার্ভ করার জন্য ডিরেক্টরি মাউন্ট করা হলো
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 class PasswordCheckRequest(BaseModel):
     password: str
 
-# ==========================================
-# 🌐 সাই-ফাই ফ্রন্টএন্ড UI (HTML/JS)
-# ==========================================
 @app.get("/", response_class=HTMLResponse)
 async def serve_website():
     html_content = """
@@ -35,7 +31,6 @@ async def serve_website():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Password Guard | Cyber Security</title>
-        <!-- CSS ফাইলটি এখানে লিঙ্ক করা হয়েছে -->
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
@@ -44,19 +39,20 @@ async def serve_website():
 
         <!-- Navbar -->
         <nav>
-            <div class="hamburger">≡</div>
-            <div class="logo" style="color:var(--accent-cyan);">PASSWORD GUARD</div>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">API docs</a></li>
-                <li><a href="#" class="btn-signup">GitHub</a></li>
+            <div class="logo" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem;">PASSWORD GUARD</div>
+            <!-- Hamburger Click Event Added -->
+            <div class="hamburger" onclick="toggleMobileMenu()">≡</div>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" onclick="toggleMobileMenu()">Home</a></li>
+                <li><a href="#about" onclick="toggleMobileMenu()">About</a></li>
+                <li><a href="#cli-section" onclick="toggleMobileMenu()">CLI Setup</a></li>
+                <li><a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="btn-signup">GitHub</a></li>
             </ul>
         </nav>
 
         <!-- Main Hero -->
-        <div class="container">
-            <!-- Background Abstract Art -->
+        <div class="container" id="home">
             <div class="tech-graphics">
                 <div class="circle-outer"></div>
                 <div class="circle-inner"></div>
@@ -64,10 +60,10 @@ async def serve_website():
             </div>
 
             <!-- Left Text -->
-            <div class="hero-text">
+            <div class="hero-text" id="about">
                 <h1>CYBER SECURITY</h1>
                 <p>Advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly without storing your sensitive data.</p>
-                <button class="btn-learn" onclick="document.querySelector('.scanner-card').scrollIntoView({behavior: 'smooth'})">Learn more</button>
+                <button class="btn-learn" onclick="document.querySelector('.scanner-card').scrollIntoView({behavior: 'smooth'})">Try Scanner</button>
             </div>
 
             <!-- Right Scanner Card -->
@@ -123,8 +119,8 @@ async def serve_website():
             </div>
         </div>
 
-        <!-- Bottom White Section -->
-        <div class="bottom-section">
+        <!-- Bottom Dark Section -->
+        <div class="bottom-section" id="cli-section">
             <h2>CLI Installation Option</h2>
             <div class="bottom-line"></div>
             <p>For maximum privacy and offline vault management, download the command-line interface. Run deep system scans, generate passwords, and manage your encrypted local database securely from your terminal.</p>
@@ -158,6 +154,12 @@ python main.py --devicescan</div>
 
         <!-- JavaScript Logic -->
         <script>
+            // Mobile Menu Toggle Logic
+            function toggleMobileMenu() {
+                const navLinks = document.getElementById("navLinks");
+                navLinks.classList.toggle("active");
+            }
+
             function toggleMask() {
                 const input = document.getElementById("pwdInput");
                 const toggle = document.getElementById("maskToggle");
@@ -292,9 +294,6 @@ python main.py --devicescan</div>
     """
     return HTMLResponse(content=html_content)
 
-# ==========================================
-# ⚙️ ওয়েবসাইটের ব্যাকএন্ড API (Serverless)
-# ==========================================
 @app.post("/api/scan")
 async def scan_password(req: PasswordCheckRequest):
     pwd = req.password
