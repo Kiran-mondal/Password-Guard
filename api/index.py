@@ -57,7 +57,7 @@ def get_base_html(title, active_path, content):
                 <li><a href="/" class="{'active-link' if active_path == '/' else ''}">Home</a></li>
                 <li><a href="/about" class="{'active-link' if active_path == '/about' else ''}">About</a></li>
                 <li><a href="/cli" class="{'active-link' if active_path == '/cli' else ''}">CLI Setup</a></li>
-                <li><a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="btn-signup">GitHub</a></li>
+                <li><a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="nav-item">GitHub</a></li>
             </ul>
         </nav>
 
