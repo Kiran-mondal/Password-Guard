@@ -13,7 +13,7 @@
 
 **Password Guard** is an advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly—without ever storing your sensitive data on public servers. Available as both a **Cloud Web Scanner** and an **Offline CLI Tool**.
 
-🌐 **Live Web Version:** [Visit Password Guard Web](https://password-guard-ivory.vercel.app)
+🌐 **Live Web Version:** [Visit Password Guard Web](https://passwordguard.quarry.dpdns.org/)
 ---
 
 ## ✨ Key Features
