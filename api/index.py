@@ -9,7 +9,7 @@ sys.path.append(BASE_DIR)
 import hashlib
 from fastapi import FastAPI
 from pydantic import BaseModel
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from core.ai_strength import AIStrength
@@ -24,7 +24,6 @@ class PasswordCheckRequest(BaseModel):
     password: str
 
 # ================= HTML BASE TEMPLATE =================
-# এই টেমপ্লেটটি সব পেজেই ব্যবহার করা হবে, যাতে মেনু এবং ব্যাকগ্রাউন্ড সব পেজে সমান থাকে।
 def get_base_html(title, active_path, content):
     return f"""
     <!DOCTYPE html>
@@ -40,7 +39,7 @@ def get_base_html(title, active_path, content):
         <div class="bg-glow glow-1"></div>
         <div class="bg-glow glow-2"></div>
 
-        <!-- 🔄 FIXED Background Animation for ALL Devices -->
+        <!-- 🔄 FIXED 3D Background Animation -->
         <div class="tech-graphics">
             <div class="circle-outer"></div>
             <div class="circle-inner"></div>
@@ -49,14 +48,13 @@ def get_base_html(title, active_path, content):
 
         <!-- Sticky Navbar -->
         <nav>
-            <div class="logo" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem; cursor: pointer;" onclick="window.location.href='/'">PASSWORD GUARD</div>
+            <div class="logo scramble-text" data-value="PASSWORD GUARD" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem; cursor: pointer;" onclick="window.location.href='/'">PASSWORD GUARD</div>
             <div class="hamburger" onclick="toggleMobileMenu()">≡</div>
             
             <ul class="nav-links" id="navLinks">
-                <!-- True URL links for Multi-Page Navigation -->
-                <li><a href="/" class="{'active-link' if active_path == '/' else ''}">Home</a></li>
-                <li><a href="/about" class="{'active-link' if active_path == '/about' else ''}">About</a></li>
-                <li><a href="/cli" class="{'active-link' if active_path == '/cli' else ''}">CLI Setup</a></li>
+                <li><a href="/" class="{'active-link' if active_path == '/' else 'nav-item'}">Home</a></li>
+                <li><a href="/about" class="{'active-link' if active_path == '/about' else 'nav-item'}">About</a></li>
+                <li><a href="/cli" class="{'active-link' if active_path == '/cli' else 'nav-item'}">CLI Setup</a></li>
                 <li><a href="https://github.com/Kiran-mondal/Password-Guard" target="_blank" class="nav-item">GitHub</a></li>
             </ul>
         </nav>
@@ -69,7 +67,54 @@ def get_base_html(title, active_path, content):
                 navLinks.classList.toggle("active");
             }}
 
-            // Scanner Scripts (Safely checks if elements exist before running)
+            // ================= CYBER DECRYPTION EFFECT =================
+            const scrambleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+~`|}{{[]:;?><,./-=";
+
+            document.addEventListener('DOMContentLoaded', initScramble);
+
+            function initScramble() {{
+                document.querySelectorAll('.scramble-text').forEach(element => {{
+                    // Hover effect
+                    element.addEventListener('mouseover', event => {{
+                        runScrambleEffect(event.target);
+                    }});
+                    
+                    // Run instantly on load
+                    runScrambleEffect(element); 
+                    
+                    // Auto repeat every 15 seconds
+                    setInterval(() => {{
+                        runScrambleEffect(element);
+                    }}, 15000);
+                }});
+            }}
+
+            function runScrambleEffect(element) {{
+                let iterations = 0;
+                const originalText = element.dataset.value;
+                
+                clearInterval(element.interval);
+                
+                element.interval = setInterval(() => {{
+                    element.innerText = originalText
+                    .split("")
+                    .map((letter, index) => {{
+                        if (letter === " ") return " ";
+                        if (index < iterations) {{
+                            return originalText[index];
+                        }}
+                        return scrambleCharacters[Math.floor(Math.random() * scrambleCharacters.length)];
+                    }})
+                    .join("");
+                    
+                    if (iterations >= originalText.length) {{
+                        clearInterval(element.interval);
+                    }}
+                    iterations += 1 / 3; 
+                }}, 30); 
+            }}
+
+            // Scanner Scripts
             function toggleMask() {{
                 const input = document.getElementById("pwdInput");
                 if(!input) return;
@@ -219,7 +264,7 @@ async def home_page():
     <div class="container">
         <!-- Left Text -->
         <div class="hero-text">
-            <h1>PASSWORD GUARD</h1>
+            <h1 class="scramble-text" data-value="PASSWORD GUARD">PASSWORD GUARD</h1>
             <p>Advanced AI-powered password protection & vault management tool. Ensure your digital life is secure by checking password strength and detecting breaches instantly without storing your sensitive data.</p>
         </div>
 
@@ -280,11 +325,10 @@ async def home_page():
 
 @app.get("/about", response_class=HTMLResponse)
 async def about_page():
-    # 📝 About page with smaller, professional text
     content = """
     <div class="container" style="justify-content: center; text-align: center; min-height: 70vh;">
         <div class="hero-text" style="padding: 0; max-width: 750px; margin: 0 auto; background: rgba(18, 31, 61, 0.7); padding: 40px; border-radius: 20px; border: 1px solid rgba(0,229,255,0.2); backdrop-filter: blur(10px);">
-            <h1 style="font-size: 2rem; margin-bottom: 20px; font-weight: 500; color: var(--accent-cyan);">ABOUT PASSWORD GUARD</h1>
+            <h1 class="scramble-text" data-value="ABOUT PASSWORD GUARD" style="font-size: 2rem; margin-bottom: 20px; font-weight: 500; color: var(--accent-cyan);">ABOUT PASSWORD GUARD</h1>
             <div style="width: 80px; height: 3px; background: var(--accent-cyan); margin: 0 auto 25px auto; box-shadow: 0 0 10px var(--accent-cyan);"></div>
             <p style="font-size: 1rem; margin: 0 auto 20px auto; color: #cbd5e1; line-height: 1.7; text-align: center;">
                 Built with modern web technologies, this tool guarantees your data privacy by performing complex entropy calculations directly in memory without saving plaintext passwords.
@@ -303,7 +347,7 @@ async def cli_page():
     content = """
     <div class="container" style="justify-content: center; min-height: 70vh;">
         <div class="bottom-section" style="width: 100%; max-width: 900px; margin: 0 auto; background: rgba(18, 31, 61, 0.7); border: 1px solid rgba(0,229,255,0.2);">
-            <h2 style="font-size: 2rem;">CLI Installation Option</h2>
+            <h2 class="scramble-text" data-value="CLI Installation Option" style="font-size: 2rem;">CLI Installation Option</h2>
             <div class="bottom-line"></div>
             <p style="font-size: 1rem; color: #cbd5e1; margin-bottom: 35px;">For maximum privacy and offline vault management, download the command-line interface. Run deep system scans, generate passwords, and manage your encrypted local database securely from your terminal.</p>
             
@@ -337,8 +381,13 @@ python main.py --devicescan</div>
     """
     return HTMLResponse(get_base_html("CLI Setup", "/cli", content))
 
-# ================= API ROUTE =================
+# ================= SITEMAP ROUTE =================
+@app.get("/sitemap.xml", response_class=FileResponse)
+async def get_sitemap():
+    sitemap_path = os.path.join(BASE_DIR, "static", "sitemap.xml")
+    return FileResponse(sitemap_path, media_type="application/xml")
 
+# ================= API ROUTE =================
 @app.post("/api/scan")
 async def scan_password(req: PasswordCheckRequest):
     pwd = req.password
