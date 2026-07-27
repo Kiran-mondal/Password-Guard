@@ -25,20 +25,54 @@ html, body {
 .glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%); }
 .glow-2 { bottom: 20%; right: -150px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 48, 255, 0.15) 0%, transparent 70%); }
 
-/* 🔄 FIXED Background Animation for ALL Devices */
+/* 🔄 3D FIXED Background Animation */
 .tech-graphics { 
     position: fixed; 
     left: 50%; top: 50%; 
     transform: translate(-50%, -50%); 
-    width: 550px; height: 550px; 
-    z-index: -1; pointer-events: none; opacity: 0.35; 
+    width: 650px; height: 650px; 
+    z-index: 0; /* 0 করা হয়েছে যাতে আর কখনো গায়েব না হয় */
+    pointer-events: none; 
+    opacity: 0.4; 
+    perspective: 1000px; /* 3D Effect এর জন্য */
 }
-.circle-outer { position: absolute; width: 100%; height: 100%; border: 1px dashed rgba(0,229,255,0.4); border-radius: 50%; animation: spin 25s linear infinite; }
-.circle-inner { position: absolute; top: 15%; left: 15%; width: 70%; height: 70%; border: 3px solid rgba(0,48,255,0.3); border-top-color: var(--accent-cyan); border-radius: 50%; box-shadow: 0 0 30px rgba(0,229,255,0.2); animation: spinReverse 15s linear infinite; }
-.core-eye { position: absolute; top: 40%; left: 40%; width: 20%; height: 20%; background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%); border-radius: 50%; box-shadow: 0 0 20px var(--accent-cyan); }
+.circle-outer { 
+    position: absolute; width: 100%; height: 100%; 
+    border: 2px dashed rgba(0,229,255,0.5); 
+    border-radius: 50%; 
+    transform-style: preserve-3d;
+    animation: spin3D 20s linear infinite; 
+    box-shadow: 0 0 40px rgba(0, 229, 255, 0.15);
+}
+.circle-inner { 
+    position: absolute; top: 15%; left: 15%; width: 70%; height: 70%; 
+    border: 4px solid rgba(0,48,255,0.3); border-top-color: var(--accent-cyan); 
+    border-radius: 50%; 
+    transform-style: preserve-3d;
+    box-shadow: inset 0 0 30px rgba(0,229,255,0.2), 0 0 30px rgba(0,229,255,0.2); 
+    animation: spinReverse3D 15s linear infinite; 
+}
+.core-eye { 
+    position: absolute; top: 40%; left: 40%; width: 20%; height: 20%; 
+    background: radial-gradient(circle, rgba(0,229,255,0.6) 0%, transparent 70%); 
+    border-radius: 50%; 
+    box-shadow: 0 0 30px var(--accent-cyan); 
+    animation: pulse3D 4s ease-in-out infinite;
+}
 
-@keyframes spin { 100% { transform: rotate(360deg); } }
-@keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+/* 3D Keyframes */
+@keyframes spin3D { 
+    0% { transform: rotateX(60deg) rotateY(15deg) rotateZ(0deg); }
+    100% { transform: rotateX(60deg) rotateY(15deg) rotateZ(360deg); } 
+}
+@keyframes spinReverse3D { 
+    0% { transform: rotateX(60deg) rotateY(-15deg) rotateZ(360deg); }
+    100% { transform: rotateX(60deg) rotateY(-15deg) rotateZ(0deg); } 
+}
+@keyframes pulse3D {
+    0%, 100% { transform: scale(1) translateZ(0); opacity: 0.8; }
+    50% { transform: scale(1.1) translateZ(50px); opacity: 1; }
+}
 
 /* Navbar */
 nav { 
@@ -58,6 +92,7 @@ nav {
 .container { 
     display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; 
     padding: 60px 5%; width: 100%; max-width: 1400px; margin: 0 auto; min-height: 80vh; 
+    position: relative; z-index: 10;
     animation: fadeIn 0.4s ease-in-out;
 }
 
@@ -151,17 +186,18 @@ input:checked + .slider:before { transform: translateX(20px); background-color: 
     .hero-text h1 { font-size: 2.2rem; } 
     .hero-text p { font-size: 1rem; margin: 0 auto; text-align: center; }
     
-    /* 🔄 Mobile Fixed Animation Restored! */
+    /* 🔄 3D Animation Always Visible on Mobile */
     .tech-graphics { 
         display: block !important; 
         width: 350px; height: 350px; 
-        opacity: 0.25; 
+        opacity: 0.35; 
+        z-index: 0; 
     }
     
-    .scanner-card { padding: 25px 20px; margin: 0 auto; width: 100%; max-width: 100%; }
+    .scanner-card { padding: 25px 20px; margin: 0 auto; width: 100%; max-width: 100%; z-index: 10; }
     .scanner-card h2 { font-size: 1.5rem; }
     
-    .bottom-section { padding: 40px 20px; width: 100%; }
+    .bottom-section { padding: 40px 20px; width: 100%; position: relative; z-index: 10; }
     .bottom-section h2 { font-size: 1.8rem; } 
     .bottom-section p { font-size: 1rem; text-align: center; }
     
