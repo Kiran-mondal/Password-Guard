@@ -48,12 +48,14 @@ async def serve_website():
             .dl-btn { display: inline-block; margin: 10px; padding: 10px 20px; background: #334155; color: white; text-decoration: none; border-radius: 6px; transition: 0.3s; }
             .dl-btn:hover { background: #475569; }
             
-            /* CLI Guide Section Styles */
-            .cli-guide { background: #1e293b; padding: 25px; border-radius: 12px; max-width: 600px; margin: 40px auto; text-align: left; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
+            /* CLI Guide Section Styles (Hidden initially) */
+            .cli-guide { display: none; background: #1e293b; padding: 25px; border-radius: 12px; max-width: 600px; margin: 40px auto; text-align: left; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); animation: fadeIn 0.5s ease-in-out; }
             .cli-guide h3 { color: #38bdf8; margin-top: 0; margin-bottom: 15px; }
             .cli-guide p { margin-left: 0; margin-bottom: 15px; font-size: 1rem; color: #cbd5e1;}
             .code-block { background: #0f172a; padding: 15px; border-radius: 6px; font-family: monospace; color: #a7f3d0; line-height: 1.6; overflow-x: auto; }
             .comment { color: #64748b; }
+
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         </style>
     </head>
     <body>
@@ -72,18 +74,18 @@ async def serve_website():
             <div id="resultBox" class="result"></div>
         </div>
 
-        <!-- Downloads Section -->
+        <!-- Downloads Section (Added onClick events) -->
         <div class="downloads">
             <h3>📥 Download Offline App</h3>
-            <a href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_linux.sh" class="dl-btn" download>🐧 Linux Installer</a>
-            <a href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_termux.sh" class="dl-btn" download>📱 Termux (Android)</a>
-            <a href="https://github.com/Kiran-mondal/Password-Guard/archive/refs/heads/main.zip" class="dl-btn">🪟 Windows (ZIP)</a>
+            <a href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_linux.sh" class="dl-btn" download onclick="showGuide()">🐧 Linux Installer</a>
+            <a href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/installers/install_termux.sh" class="dl-btn" download onclick="showGuide()">📱 Termux (Android)</a>
+            <a href="https://github.com/Kiran-mondal/Password-Guard/archive/refs/heads/main.zip" class="dl-btn" onclick="showGuide()">🪟 Windows (ZIP)</a>
         </div>
 
-        <!-- CLI Guide Section -->
-        <div class="cli-guide">
+        <!-- CLI Guide Section (Dynamically shown) -->
+        <div id="cliGuide" class="cli-guide">
             <h3>💻 Terminal / CLI Usage</h3>
-            <p>After downloading, you can run the app completely offline via terminal for maximum privacy:</p>
+            <p>Your download has started! You can run the app completely offline via terminal for maximum privacy using these commands:</p>
             <div class="code-block">
                 <span class="comment"># Scan a password securely</span><br>
                 <code>python main.py --scan "your_password"</code><br><br>
@@ -98,6 +100,15 @@ async def serve_website():
 
         <!-- JavaScript -->
         <script>
+            // Show Guide Function
+            function showGuide() {
+                const guide = document.getElementById("cliGuide");
+                guide.style.display = "block";
+                setTimeout(() => {
+                    guide.scrollIntoView({ behavior: "smooth" });
+                }, 100);
+            }
+
             function generatePassword() {
                 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
                 let password = "";
@@ -175,7 +186,7 @@ async def scan_password(req: PasswordCheckRequest):
             """, pwd_hash, strength_data["score"], is_leaked)
             await conn.close() 
     except Exception as e:
-        pass # সার্ভারলেস লগিং ফেইল করলে ক্র্যাশ ঠেকানোর জন্য
+        pass 
     
     return {
         "status": "success",
