@@ -8,7 +8,7 @@ sys.path.append(BASE_DIR)
 import hashlib
 from fastapi import FastAPI
 from pydantic import BaseModel
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from core.ai_strength import AIStrength
@@ -417,7 +417,7 @@ async def github_preview_page():
 
     cards_html = ""
     for p in all_projects:
-        if p["id"] == "password-guard":  # বর্তমান অ্যাপটি এই পেজে দেখাবে না
+        if p["id"] == "password-guard":
             continue
         cards_html += f"""
             <div class="repo-card">
@@ -456,11 +456,39 @@ async def github_preview_page():
     """
     return HTMLResponse(get_base_html("Projects Preview", "/github", content))
 
-@app.get("/sitemap.xml", response_class=FileResponse)
+# ================= SITEMAP ROUTE =================
+@app.get("/sitemap.xml")
 async def get_sitemap():
-    sitemap_path = os.path.join(BASE_DIR, "static", "sitemap.xml")
-    return FileResponse(sitemap_path, media_type="application/xml")
+    sitemap_content = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://password-guard-ivory.vercel.app/</loc>
+      <lastmod>2026-07-27</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+   </url>
+   <url>
+      <loc>https://password-guard-ivory.vercel.app/about</loc>
+      <lastmod>2026-07-27</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://password-guard-ivory.vercel.app/cli</loc>
+      <lastmod>2026-07-27</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://password-guard-ivory.vercel.app/github</loc>
+      <lastmod>2026-07-27</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.9</priority>
+   </url>
+</urlset>"""
+    return Response(content=sitemap_content, media_type="application/xml")
 
+# ================= API ROUTE =================
 @app.post("/api/scan")
 async def scan_password(req: PasswordCheckRequest):
     pwd = req.password
