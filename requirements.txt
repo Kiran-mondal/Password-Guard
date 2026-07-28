@@ -10,3 +10,4 @@ uvicorn
 asyncpg
 python-dotenv
 pydantic
+slowapi==0.1.9
