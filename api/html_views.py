@@ -311,7 +311,6 @@ def get_cli_content():
         </div>
     </div>
     """
-
 def get_github_content():
     all_projects = [
         {
@@ -321,6 +320,14 @@ def get_github_content():
             "live": "https://passwordguard.quarry.dpdns.org",
             "code": "https://github.com/Kiran-mondal/Password-Guard",
             "svg": '''<svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512" rx="120" fill="#0D4FF0"/><path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/><circle cx="256" cy="255" r="70" fill="#0D4FF0"/><rect x="235" y="240" width="42" height="75" rx="8" fill="white"/></svg>'''
+        },
+        {
+            "id": "pachisi",
+            "title": "Pachisi",
+            "desc": "Play the ancient Indian epic board game of strategy, heritage, and royal culture.",
+            "live": "https://pachisi.quarry.dpdns.org",
+            "code": "https://github.com/Kiran-mondal",
+            "svg": '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36"><defs><mask id="pasha-hole"><rect width="512" height="512" fill="white" /><circle cx="256" cy="256" r="32" fill="black" /></mask></defs><g mask="url(#pasha-hole)" fill="#dc2626"><rect x="232" y="16" width="48" height="480" rx="12" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" /><circle cx="256" cy="256" r="168" fill="none" stroke="#dc2626" stroke-width="48" /><circle cx="256" cy="256" r="56" fill="none" stroke="#dc2626" stroke-width="48" /></g></svg>'''
         },
         {
             "id": "zendrift",
