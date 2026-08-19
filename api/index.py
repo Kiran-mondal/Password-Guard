@@ -27,6 +27,14 @@ logger = logging.getLogger(__name__)
 ai = AIStrength()
 app = FastAPI(title="Password Guard Web")
 
+# 🛡️ Security Headers Middleware (CSP & X-Frame-Options Fix)
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Content-Security-Policy"] = "default-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';"
+    return response
+
 # 🛡️ Rate Limiter Setup
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
@@ -37,8 +45,7 @@ app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), na
 # 🛡️ Input Validation
 class PasswordCheckRequest(BaseModel):
     password: str = Field(..., max_length=128, description="User password for scanning")
-
-# ================= 🎨 HTML CONTENT FUNCTIONS =================
+ # ================= 🎨 HTML CONTENT FUNCTIONS =================
 
 def get_base_html(title, active_path, content):
     return f"""
@@ -368,7 +375,7 @@ def get_github_content():
             "desc": "Play the ancient Indian epic board game of strategy, heritage, and royal culture.",
             "live": "https://pachisi.quarry.dpdns.org",
             "code": "https://github.com/Kiran-mondal",
-             "svg": '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36"><defs><mask id="pasha-hole"><rect width="512" height="512" fill="white" /><circle cx="256" cy="256" r="32" fill="black" /></mask></defs><g mask="url(#pasha-hole)" fill="#dc2626"><rect x="232" y="16" width="48" height="480" rx="12" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" /><circle cx="256" cy="256" r="168" fill="none" stroke="#dc2626" stroke-width="48" /><circle cx="256" cy="256" r="56" fill="none" stroke="#dc2626" stroke-width="48" /></g></svg>'''
+            "svg": '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="36" height="36"><defs><mask id="pasha-hole"><rect width="512" height="512" fill="white" /><circle cx="256" cy="256" r="32" fill="black" /></mask></defs><g mask="url(#pasha-hole)" fill="#dc2626"><rect x="232" y="16" width="48" height="480" rx="12" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(45 256 256)" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(90 256 256)" /><rect x="232" y="16" width="48" height="480" rx="12" transform="rotate(135 256 256)" /><circle cx="256" cy="256" r="168" fill="none" stroke="#dc2626" stroke-width="48" /><circle cx="256" cy="256" r="56" fill="none" stroke="#dc2626" stroke-width="48" /></g></svg>'''
         },
         {
             "id": "zendrift",
@@ -460,7 +467,8 @@ def get_sitemap_content():
       <changefreq>monthly</changefreq>
       <priority>0.9</priority>
    </url>
-</urlset>"""
+</urlset>
+"""
 # ================= 🌐 WEB ROUTES =================
 
 @app.get("/", response_class=HTMLResponse)
