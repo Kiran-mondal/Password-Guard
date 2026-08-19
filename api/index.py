@@ -99,7 +99,9 @@ def get_base_html(title, active_path, content):
                 navLinks.classList.toggle("active");
             }}
 
-            const scrambleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+~`|}}{{[]:;?><,./-=";
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const symbols = "!@#$%^&*()_+~`|}}{{[]:;?><,./-=";
+            const scrambleCharacters = letters + symbols;
 
             document.addEventListener('DOMContentLoaded', initScramble);
 
