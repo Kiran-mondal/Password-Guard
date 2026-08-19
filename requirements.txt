@@ -1,9 +1,3 @@
-# Existing Dependencies
-kivy
-kivymd
-requests
-cryptography
-
 # Web & Database Dependencies
 fastapi
 uvicorn
@@ -11,3 +5,5 @@ asyncpg
 python-dotenv
 pydantic
 slowapi==0.1.9
+requests
+cryptography
