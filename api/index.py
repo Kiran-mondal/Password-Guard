@@ -383,6 +383,14 @@ def get_github_content():
             "svg": '''<svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512" rx="120" fill="#0D4FF0"/><path d="M256 80L120 140V240C120 330 176 407 256 432C336 407 392 330 392 240V140L256 80Z" fill="white"/><circle cx="256" cy="255" r="70" fill="#0D4FF0"/><rect x="235" y="240" width="42" height="75" rx="8" fill="white"/></svg>'''
         },
         {
+            "id": "triscout",
+            "title": "TriScout",
+            "desc": "An advanced defensive cybersecurity tool designed for passive vulnerability assessments and automated reporting.",
+            "live": "https://tri-scout-sigma.vercel.app",
+            "code": "https://github.com/Kiran-mondal/tri-scout",
+            "svg": '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="34" height="34"><g fill="none" stroke="#66ED1E" stroke-linecap="round" stroke-linejoin="round"><polygon points="50,2 91.6,26 91.6,74 50,98 8.4,74 8.4,26" stroke-width="1.5" /><polygon points="50,10 84.6,30 84.6,70 50,90 15.4,70 15.4,30" stroke-width="3" /><g stroke-width="2.5"><line x1="15.4" y1="30" x2="84.6" y2="70" /><line x1="32.7" y1="20" x2="84.6" y2="50" /><line x1="15.4" y1="50" x2="67.3" y2="80" /><line x1="15.4" y1="50" x2="67.3" y2="20" /><line x1="32.7" y1="80" x2="84.6" y2="50" /></g></g></svg>'''
+        },
+        {
             "id": "pachisi",
             "title": "Pachisi",
             "desc": "Play the ancient Indian epic board game of strategy, heritage, and royal culture.",
@@ -433,6 +441,25 @@ def get_github_content():
                 </div>
             </div>
         """
+
+    return f"""
+    <div class="container" style="display: block; min-height: 70vh; padding-top: 20px;">
+        <div class="github-profile">
+            <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal">
+            <h2 class="scramble-text" data-value="Kiran Mondal">Kiran Mondal</h2>
+            <p>Full-Stack Developer & Cyber Security Enthusiast</p>
+            <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
+        </div>
+        <div style="text-align: center; margin-bottom: 35px; margin-top: 50px;">
+            <h3 style="color: white; font-size: 1.6rem; margin: 0;">🌐 My Other Live Projects</h3>
+            <div class="bottom-line" style="width: 180px; margin: 15px auto 0 auto;"></div>
+        </div>
+        <div class="repo-grid">
+            {cards_html}
+        </div>
+        <br><br>
+    </div>
+    """
 
     return f"""
     <div class="container" style="display: block; min-height: 70vh; padding-top: 20px;">
