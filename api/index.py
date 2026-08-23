@@ -386,7 +386,7 @@ def get_github_content():
             "id": "triscout",
             "title": "TriScout",
             "desc": "An advanced defensive cybersecurity tool designed for passive vulnerability assessments and automated reporting.",
-            "live": "https://tri-scout-sigma.vercel.app",
+            "live": "https://triscout.quarry.dpdns.org/",
             "code": "https://github.com/Kiran-mondal/tri-scout",
             "svg": '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="34" height="34"><g fill="none" stroke="#66ED1E" stroke-linecap="round" stroke-linejoin="round"><polygon points="50,2 91.6,26 91.6,74 50,98 8.4,74 8.4,26" stroke-width="1.5" /><polygon points="50,10 84.6,30 84.6,70 50,90 15.4,70 15.4,30" stroke-width="3" /><g stroke-width="2.5"><line x1="15.4" y1="30" x2="84.6" y2="70" /><line x1="32.7" y1="20" x2="84.6" y2="50" /><line x1="15.4" y1="50" x2="67.3" y2="80" /><line x1="15.4" y1="50" x2="67.3" y2="20" /><line x1="32.7" y1="80" x2="84.6" y2="50" /></g></g></svg>'''
         },
