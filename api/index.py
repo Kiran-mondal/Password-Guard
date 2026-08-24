@@ -81,7 +81,7 @@ def get_base_html(title, active_path, content):
 
         <nav>
             <div class="logo scramble-text" data-value="PASSWORD GUARD" style="color:var(--accent-cyan); font-weight: bold; font-size: 1.2rem; cursor: pointer;" onclick="window.location.href='/'">PASSWORD GUARD</div>
-            <div class="hamburger" onclick="toggleMobileMenu()">≡</div>
+            <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Toggle navigation menu" aria-expanded="false">≡</button>
             
             <ul class="nav-links" id="navLinks">
                 <li><a href="/" class="{'active-link' if active_path == '/' else 'nav-item'}">Home</a></li>
@@ -96,7 +96,11 @@ def get_base_html(title, active_path, content):
         <script>
             function toggleMobileMenu() {{
                 const navLinks = document.getElementById("navLinks");
-                navLinks.classList.toggle("active");
+                const hamburger = document.getElementById("hamburgerBtn");
+                const isActive = navLinks.classList.toggle("active");
+                if (hamburger) {{
+                    hamburger.setAttribute("aria-expanded", isActive);
+                }}
             }}
 
             const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -230,6 +234,12 @@ def get_base_html(title, active_path, content):
                 const resultBox = document.getElementById("resultBox");
                 if(!pwd) {{ alert("Please enter a password!"); return; }}
 
+                const scanBtn = document.querySelector(".btn-scan");
+                if (scanBtn) {{
+                    scanBtn.disabled = true;
+                    scanBtn.innerText = "Scanning... ⏳";
+                }}
+
                 resultBox.style.display = "block";
                 resultBox.style.backgroundColor = "#1e293b";
                 resultBox.innerHTML = "Scanning Neon Cloud Database... ⏳";
@@ -255,6 +265,11 @@ def get_base_html(title, active_path, content):
                     }}
                 }} catch(err) {{
                     resultBox.innerHTML = "❌ Error connecting to secure server.";
+                }} finally {{
+                    if (scanBtn) {{
+                        scanBtn.disabled = false;
+                        scanBtn.innerText = "Cloud Breach Scan";
+                    }}
                 }}
             }}
 

@@ -1,0 +1,3 @@
+## 2026-08-24 - Accessibility and Feedback Improvements
+**Learning:** Adding dynamic ARIA states (`aria-expanded`) to interactive elements like hamburger menus greatly improves screen reader compatibility without altering visual design. Additionally, adding loading feedback (`:disabled` state, changing text to "Scanning... ⏳") on asynchronous API calls (e.g., Cloud Breach Scan) prevents duplicate requests and significantly reduces user frustration during network latency.
+**Action:** When implementing custom interactive elements (like `div`s functioning as buttons), convert them to semantic tags (like `<button>`) with proper ARIA attributes. For any asynchronous operation, ensure the triggering button visually indicates a loading state and becomes temporarily disabled.
