@@ -5,10 +5,14 @@ from core.utils import is_online
 
 PWNED_URL = "https://api.pwnedpasswords.com/range/"
 
+# Reusing a session allows for HTTP keep-alive and connection pooling,
+# significantly speeding up repeated network calls.
+session = requests.Session()
+
 def online_check(password):
     sha1 = hashlib.sha1(password.encode("utf-8")).hexdigest().upper()
     head, tail = sha1[:5], sha1[5:]
-    response = requests.get(PWNED_URL + head, timeout=3).text
+    response = session.get(PWNED_URL + head, timeout=3).text
     return tail in response
 
 def breach_check(password, strength_score=0):
