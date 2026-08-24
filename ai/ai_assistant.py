@@ -75,7 +75,8 @@ class AIAssistant:
                     weak_count += 1
 
                 if report["leaked"] and score < 3:
-                    print(f"🚨 CRITICAL: {pwd} = LEAKED + WEAK")
+                    masked_pwd = "*" * len(pwd)
+                    print(f"🚨 CRITICAL: {masked_pwd} = LEAKED + WEAK")
 
         return f"\nScan Completed 🔍\nLeaked: {leaked_count}\nWeak: {weak_count}"
 
