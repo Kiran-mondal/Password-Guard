@@ -1,10 +1,14 @@
 import re, hashlib, requests, math
 
+# Reusing a session allows for HTTP keep-alive and connection pooling,
+# significantly speeding up repeated network calls.
+session = requests.Session()
+
 def check_leak(password):
     sha1 = hashlib.sha1(password.encode("utf-8")).hexdigest().upper()
     prefix, suffix = sha1[:5], sha1[5:]
     url = f"https://api.pwnedpasswords.com/range/{prefix}"
-    response = requests.get(url).text
+    response = session.get(url).text
     return suffix in response
 
 def password_strength(password):
