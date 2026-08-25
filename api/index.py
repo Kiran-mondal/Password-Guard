@@ -289,9 +289,15 @@ def get_base_html(title, active_path, content):
                 }}
             }}
 
-            function copyText(elementId) {{
+            function copyText(elementId, btn) {{
                 navigator.clipboard.writeText(document.getElementById(elementId).innerText);
-                alert("Copied to clipboard!");
+                if (btn && btn.innerText !== "Copied!") {{
+                    const originalText = btn.innerText;
+                    btn.innerText = "Copied!";
+                    setTimeout(() => {{
+                        btn.innerText = originalText;
+                    }}, 2000);
+                }}
             }}
         </script>
     </body>
@@ -374,12 +380,12 @@ def get_cli_content():
             <div id="cliGuide" class="cli-guide">
                 <h3 id="osTitle">Installation</h3>
                 <div class="code-box-container">
-                    <button class="small-copy-btn" onclick="copyText('installCommand')">Copy</button>
+                    <button class="small-copy-btn" onclick="copyText('installCommand', this)" aria-label="Copy installation command to clipboard">Copy</button>
                     <div id="installCommand" class="code-block"></div>
                 </div>
                 <h3>🚀 Usage Commands</h3>
                 <div class="code-box-container">
-                    <button class="small-copy-btn" onclick="copyText('usageCommand')">Copy</button>
+                    <button class="small-copy-btn" onclick="copyText('usageCommand', this)" aria-label="Copy usage commands to clipboard">Copy</button>
                     <div id="usageCommand" class="code-block"><span class="comment"># Scan a password</span>\npython main.py --scan "your_password"\n\n<span class="comment"># Generate a strong password</span>\npython main.py --generate\n\n<span class="comment"># Scan device for saved browser passwords</span>\npython main.py --devicescan</div>
                 </div>
             </div>
