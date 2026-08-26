@@ -7,7 +7,7 @@ import hashlib
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, BackgroundTasks
 from pydantic import BaseModel, Field
 from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -554,11 +554,12 @@ async def get_sitemap():
 
 @app.post("/api/scan")
 @limiter.limit("15/minute")
-async def scan_password(request: Request, req: PasswordCheckRequest):
+async def scan_password(request: Request, req: PasswordCheckRequest, background_tasks: BackgroundTasks):
     pwd = req.password
     
     strength_data = ai.analyze(pwd)
-    is_leaked = breach_check(pwd)
+    import asyncio
+    is_leaked = await asyncio.to_thread(breach_check, pwd)
     
     has_upper = bool(re.search(r'[A-Z]', pwd))
     has_lower = bool(re.search(r'[a-z]', pwd))
@@ -571,17 +572,8 @@ async def scan_password(request: Request, req: PasswordCheckRequest):
     
     pwd_hash = hashlib.sha256(pwd.encode()).hexdigest()
     
-    try:
-        from cloud.neon_db import get_db_connection
-        conn = await get_db_connection()
-        if conn:
-            await conn.execute("""
-                INSERT INTO scan_logs (password_hash, strength_score, is_leaked)
-                VALUES ($1, $2, $3)
-            """, pwd_hash, strength_data["score"], is_leaked)
-            await conn.close() 
-    except Exception as e:
-        logger.error(f"Database insertion failed: {str(e)}")
+    from cloud.neon_db import log_scan_to_neon
+    background_tasks.add_task(log_scan_to_neon, pwd_hash, strength_data["score"], is_leaked)
     
     return {
         "status": "success",

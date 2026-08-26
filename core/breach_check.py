@@ -34,7 +34,7 @@ def breach_check(password, strength_score=0):
             
             try:
                 # অ্যাসিঙ্ক্রোনাস Neon DB ফাংশন রান করা
-                asyncio.run(log_scan_to_neon(pwd_hash, strength_score, is_leaked))
+                pass  # DB logging moved to FastAPI BackgroundTasks
             except Exception:
                 pass  # ব্যাকগ্রাউন্ড লগিং ফেইল করলে মেইন প্রসেস যেন ক্র্যাশ না করে
                 
