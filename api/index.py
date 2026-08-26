@@ -575,6 +575,8 @@ async def scan_password(request: Request, req: PasswordCheckRequest, background_
     try:
         from cloud.neon_db import log_scan_to_neon
         background_tasks.add_task(log_scan_to_neon, pwd_hash, strength_data["score"], is_leaked)
+    except ImportError:
+        logger.warning("Cloud DB telemetry setup skipped: asyncpg not installed.")
     except Exception as e:
         logger.error(f"Cloud DB telemetry setup failed: {str(e)}")
     
