@@ -572,8 +572,11 @@ async def scan_password(request: Request, req: PasswordCheckRequest, background_
     
     pwd_hash = hashlib.sha256(pwd.encode()).hexdigest()
     
-    from cloud.neon_db import log_scan_to_neon
-    background_tasks.add_task(log_scan_to_neon, pwd_hash, strength_data["score"], is_leaked)
+    try:
+        from cloud.neon_db import log_scan_to_neon
+        background_tasks.add_task(log_scan_to_neon, pwd_hash, strength_data["score"], is_leaked)
+    except Exception as e:
+        logger.error(f"Cloud DB telemetry setup failed: {str(e)}")
     
     return {
         "status": "success",
