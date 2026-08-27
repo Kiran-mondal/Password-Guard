@@ -28,15 +28,7 @@ def breach_check(password, strength_score=0):
         try:
             is_leaked = online_check(password)
             
-            # Zero-Knowledge Telemetry: Neon DB তে শুধুমাত্র হ্যাশ সেভ করবে
-            from cloud.neon_db import log_scan_to_neon
-            pwd_hash = hashlib.sha256(password.encode()).hexdigest()
-            
-            try:
-                # অ্যাসিঙ্ক্রোনাস Neon DB ফাংশন রান করা
-                asyncio.run(log_scan_to_neon(pwd_hash, strength_score, is_leaked))
-            except Exception:
-                pass  # ব্যাকগ্রাউন্ড লগিং ফেইল করলে মেইন প্রসেস যেন ক্র্যাশ না করে
+            # Telemetry logging moved to FastAPI BackgroundTasks
                 
         except requests.RequestException:
             print("⚠️ Cloud API Error: Falling back to Local Database...")
