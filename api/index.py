@@ -11,6 +11,7 @@ from fastapi import FastAPI, Request, BackgroundTasks
 from pydantic import BaseModel, Field
 from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 # 🛡️ Rate Limiting 
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -26,6 +27,20 @@ logger = logging.getLogger(__name__)
 
 ai = AIStrength()
 app = FastAPI(title="Password Guard Web")
+
+# 🛡️ CORS Middleware Setup
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://passwordguard.quarry.dpdns.org"
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
 
 # 🛡️ Security Headers Middleware (CSP, X-Frame-Options & Rate Limit Headers)
 @app.middleware("http")
