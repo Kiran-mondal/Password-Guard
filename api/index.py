@@ -80,6 +80,7 @@ def get_base_html(title, active_path, content):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="strix-verification" content="strix-verify-7c2e0e19435b11968341086ef5593c9c">
         <title>{title} | Password Guard</title>
         <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/assets/logo.svg">
         <link rel="stylesheet" href="/static/style.css">
