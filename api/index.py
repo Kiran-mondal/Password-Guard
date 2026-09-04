@@ -81,6 +81,7 @@ def get_base_html(title, active_path, content):
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{title} | Password Guard</title>
+        <script src="https://telegram.org/js/telegram-web-app.js"></script>
         <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/Kiran-mondal/Password-Guard/main/assets/logo.svg">
         <link rel="stylesheet" href="/static/style.css">
     </head>
