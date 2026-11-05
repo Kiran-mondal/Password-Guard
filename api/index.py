@@ -28,38 +28,46 @@ logger = logging.getLogger(__name__)
 ai = AIStrength()
 app = FastAPI(title="Password Guard Web")
 
-# 🛡️ CORS Middleware Setup
+# 🛡️ CORS Middleware Setup (NovalNetwork Hub Added)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
-        "https://passwordguard.quarry.dpdns.org"
+        "https://passwordguard.quarry.dpdns.org",
+        "https://noval-network.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
-# 🛡️ Security Headers Middleware (CSP, X-Frame-Options & Rate Limit Headers)
+# 🛡️ Security Headers Middleware (Updated to allow NovalNetwork Hub & Telegram WebApp framing)
 @app.middleware("http")
 async def add_security_headers(request: Request, call_next):
     response = await call_next(request)
     
-    # 1. X-Frame-Options (Clickjacking Protection)
-    response.headers["X-Frame-Options"] = "DENY"
+    # Remove X-Frame-Options so Content-Security-Policy frame-ancestors can control framing safely
+    if "X-Frame-Options" in response.headers:
+        del response.headers["X-Frame-Options"]
     
-    # 2. Content-Security-Policy (XSS Protection)
-    response.headers["Content-Security-Policy"] = "default-src 'self' https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';"
+    # 1. Content-Security-Policy (Allows NovalNetwork Hub & Telegram while keeping XSS protection)
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self' https:; "
+        "style-src 'self' 'unsafe-inline' https:; "
+        "script-src 'self' 'unsafe-inline' https://telegram.org; "
+        "img-src 'self' data: https:; "
+        "frame-ancestors 'self' https://noval-network.vercel.app https://*.vercel.app https://*.dpdns.org https://*.telegram.org;"
+    )
     
-    # 3. Rate Limit Headers (Scanner Satisfaction)
+    # 2. Rate Limit Headers (Scanner Satisfaction)
     response.headers["X-RateLimit-Limit"] = "15"
     response.headers["X-RateLimit-Remaining"] = "14"
     response.headers["X-RateLimit-Reset"] = "60"
     
     return response
-    
+
 
 # 🛡️ Rate Limiter Setup
 limiter = Limiter(key_func=get_remote_address)
@@ -71,7 +79,8 @@ app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), na
 # 🛡️ Input Validation
 class PasswordCheckRequest(BaseModel):
     password: str = Field(..., max_length=128, description="User password for scanning")
- # ================= 🎨 HTML CONTENT FUNCTIONS =================
+
+# ================= 🎨 HTML CONTENT FUNCTIONS =================
 
 def get_base_html(title, active_path, content):
     return f"""
@@ -498,25 +507,6 @@ def get_github_content():
     </div>
     """
 
-    return f"""
-    <div class="container" style="display: block; min-height: 70vh; padding-top: 20px;">
-        <div class="github-profile">
-            <img src="https://github.com/Kiran-mondal.png" alt="Kiran Mondal">
-            <h2 class="scramble-text" data-value="Kiran Mondal">Kiran Mondal</h2>
-            <p>Full-Stack Developer & Cyber Security Enthusiast</p>
-            <a href="https://github.com/Kiran-mondal" target="_blank" class="btn-github-main">View Full GitHub Profile</a>
-        </div>
-        <div style="text-align: center; margin-bottom: 35px; margin-top: 50px;">
-            <h3 style="color: white; font-size: 1.6rem; margin: 0;">🌐 My Other Live Projects</h3>
-            <div class="bottom-line" style="width: 180px; margin: 15px auto 0 auto;"></div>
-        </div>
-        <div class="repo-grid">
-            {cards_html}
-        </div>
-        <br><br>
-    </div>
-    """
-
 def get_sitemap_content():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -546,6 +536,7 @@ def get_sitemap_content():
    </url>
 </urlset>
 """
+
 # ================= 🌐 WEB ROUTES =================
 
 @app.get("/", response_class=HTMLResponse)
@@ -608,5 +599,4 @@ async def scan_password(request: Request, req: PasswordCheckRequest, background_
         "ai_score": strength_data["score"],
         "entropy": strength_data["entropy"],
         "suggestions": strength_data["suggestion"]
-        }
-        
+}
