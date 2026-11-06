@@ -35,6 +35,55 @@ app = FastAPI(
     redoc_url=None,
     openapi_url=None
 )
+
+# 🛡️ Rate Limiter Setup (MUST be defined before routes)
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# 🛡️ CORS Middleware Setup (NovalNetwork Hub Added)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://passwordguard.quarry.dpdns.org",
+        "https://noval-network.vercel.app"
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+# 🛡️ Security Headers Middleware (Allows NovalNetwork Hub & Telegram WebApp framing)
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    
+    if "X-Frame-Options" in response.headers:
+        del response.headers["X-Frame-Options"]
+    
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self' https:; "
+        "style-src 'self' 'unsafe-inline' https:; "
+        "script-src 'self' 'unsafe-inline' https://telegram.org; "
+        "img-src 'self' data: https:; "
+        "frame-ancestors 'self' https://noval-network.vercel.app https://*.vercel.app https://*.dpdns.org https://*.telegram.org;"
+    )
+    
+    response.headers["X-RateLimit-Limit"] = "15"
+    response.headers["X-RateLimit-Remaining"] = "14"
+    response.headers["X-RateLimit-Reset"] = "60"
+    
+    return response
+
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
+
+# 🛡️ Input Validation
+class PasswordCheckRequest(BaseModel):
+    password: str = Field(..., max_length=128, description="User password for scanning")
+
 # ================= 🌐 WEB ROUTES =================
 
 @app.get("/", response_class=HTMLResponse)
@@ -101,5 +150,4 @@ async def scan_password(request: Request, req: PasswordCheckRequest, background_
         "ai_score": strength_data["score"],
         "entropy": strength_data["entropy"],
         "suggestions": strength_data["suggestion"]
-    }
-    
+        }
