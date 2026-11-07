@@ -589,9 +589,9 @@ async def scan_password(request: Request, req: PasswordCheckRequest, background_
         strength_data["score"] = 100
         strength_data["suggestion"] = ["Excellent! Your password meets all standard security criteria."]
     
-    # 🛡️ Keyed HMAC-SHA256 instead of raw SHA-256 to protect scan logs
+    # 🛡️ Use PBKDF2-HMAC-SHA256 (computationally expensive) for password-derived telemetry hashing
     secret_pepper = os.getenv("HASH_SECRET_PEPPER", "password-guard-default-pepper-change-in-env")
-    pwd_hash = hmac.new(secret_pepper.encode(), pwd.encode(), hashlib.sha256).hexdigest()
+    pwd_hash = hashlib.pbkdf2_hmac("sha256", pwd.encode(), secret_pepper.encode(), 310000).hex()
     
     try:
         from cloud.neon_db import log_scan_to_neon
