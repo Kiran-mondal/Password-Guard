@@ -99,7 +99,7 @@ def get_base_html(title, active_path, content):
         <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-P66G9XMP"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){{dataLayer.push(arguments);}}
   gtag('js', new Date());
 </script>
         <script src="https://telegram.org/js/telegram-web-app.js"></script>
